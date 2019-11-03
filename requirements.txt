@@ -1,3 +1,6 @@
+boto3
 bs4
 html5lib
+pandas
 requests
+s3fs
