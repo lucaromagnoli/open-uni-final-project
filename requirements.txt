@@ -1,5 +1,6 @@
 boto3
 bs4
+Django
 html5lib
 pandas
 requests
