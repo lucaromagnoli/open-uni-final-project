@@ -72,7 +72,7 @@ class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     gender = models.CharField(max_length=2, choices=GENDER_CHOICES)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    product_type = models.ForeignKey(CategoryType, on_delete=models.CASCADE)
+    product_types = models.ManyToManyField(CategoryType)
     design_details = models.ManyToManyField(CategoryDesignDetail)
     colors = models.ManyToManyField(Color)
     materials = models.ManyToManyField(Material)
