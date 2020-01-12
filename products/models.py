@@ -86,8 +86,9 @@ class Product(models.Model):
         return f'{self.title} | {self.manufacturer} | {self.category}'
 
     def clean(self):
-        if self.category != self.product_type.category:
-            raise ValidationError(f'Invalid product type: {self.product_type} for product with category {self.category}')
+        for t in self.product_types.objects.all():
+            if t.category != self.category:
+                raise ValidationError(f'Invalid product type: {t} for product with category {self.category}')
         for d in self.design_details.objects.all():
             if self.category != d.category:
                 raise ValidationError(f'Invalid design detail: {d} for product with category {self.category}')
