@@ -33,18 +33,18 @@ class DesignDetail(models.Model):
 
 class CategoryType(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    name = models.ForeignKey(Type, on_delete=models.CASCADE)
+    type = models.ForeignKey(Type, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.name} | {self.category}'
+        return f'{self.category}| {self.type}'
 
 
 class CategoryDesignDetail(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    name = models.ForeignKey(DesignDetail, on_delete=models.CASCADE)
+    design_detail = models.ForeignKey(DesignDetail, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.name} | {self.category}'
+        return f'{self.category} | {self.design_detail}'
 
 
 class Material(models.Model):
@@ -83,11 +83,16 @@ class Product(models.Model):
     weight = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return f'{self.title} | {self.manufacturer}'
+        return f'{self.title} | {self.manufacturer} | {self.category}'
 
     def clean(self):
         if self.category != self.product_type.category:
             raise ValidationError(f'Invalid product type: {self.product_type} for product with category {self.category}')
-        for d in self.design_details.all():
+        for d in self.design_details.objects.all():
             if self.category != d.category:
                 raise ValidationError(f'Invalid design detail: {d} for product with category {self.category}')
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
