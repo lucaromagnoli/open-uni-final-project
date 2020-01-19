@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+boto3 = "*"
+bs4 = "*"
+html5lib = "*"
+ipython = "*"
+pandas = "*"
+psycopg2 = "*"
+requests = "*"
+s3fs = "*"
+Django = "*"
+
+[requires]
+python_version = "3.7"
