@@ -2,8 +2,8 @@ boto3
 bs4
 Django
 html5lib
+ipython
 pandas
 psycopg2
 requests
 s3fs
-ipython
