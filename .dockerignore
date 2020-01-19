@@ -1,8 +1,11 @@
 .git
 .ipynb_checkpoints
 Dockerfile
+docker-compose.yml
+db.sqlite3
 .DS_Store
 .gitignore
 README.md
 venv/*
 *.csv
+*.ipynb
