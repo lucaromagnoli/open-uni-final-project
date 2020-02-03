@@ -16,8 +16,7 @@ NEWSPIDER_MODULE = 'scrapy_scrapers.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'scrapy_scrapers (+http://www.yourdomain.com)'
-
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 

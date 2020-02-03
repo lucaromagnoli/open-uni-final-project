@@ -22,7 +22,7 @@ class CsvPipeline(object):
         self.exporter = None
 
     def open_spider(self, spider):
-        self.file = open(f'{spider.name}_{datetime.datetime.utcnow().strftime("%Y-%m-%d-%H-%M")}.csv', 'wb')
+        self.file = open(f'{spider.name}_{spider.category}_{datetime.datetime.utcnow().strftime("%Y-%m-%d-%H-%M")}.csv', 'wb')
         self.exporter = TSVItemExporter(self.file, encoding='utf-16')
         self.exporter.start_exporting()
 

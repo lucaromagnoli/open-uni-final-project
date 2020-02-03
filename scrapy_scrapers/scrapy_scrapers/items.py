@@ -14,3 +14,5 @@ class PagineGialleBusiness(scrapy.Item):
     description = scrapy.Field()
     pagine_gialle_url = scrapy.Field()
     website = scrapy.Field()
+    telephone = scrapy.Field()
+    search_url = scrapy.Field()
