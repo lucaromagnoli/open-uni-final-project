@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for scrapy_scrapers project
+# Scrapy settings for scrapers project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,15 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'scrapy_scrapers'
+BOT_NAME = 'scrapers'
 
-SPIDER_MODULES = ['scrapy_scrapers.spiders']
-NEWSPIDER_MODULE = 'scrapy_scrapers.spiders'
+SPIDER_MODULES = ['scrapers.spiders']
+NEWSPIDER_MODULE = 'scrapers.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
+#USER_AGENT = 'scrapers (+http://www.yourdomain.com)'
+
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
@@ -26,7 +27,7 @@ CONCURRENT_REQUESTS = 8
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 3
+#DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -46,13 +47,13 @@ DOWNLOAD_DELAY = 3
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'scrapy_scrapers.middlewares.ScrapyScrapersSpiderMiddleware': 543,
+#    'scrapers.middlewares.ScrapersSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'scrapy_scrapers.middlewares.ScrapyScrapersDownloaderMiddleware': 543,
+#    'scrapers.middlewares.ScrapersDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -64,7 +65,7 @@ DOWNLOAD_DELAY = 3
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'scrapy_scrapers.pipelines.CsvPipeline': 300,
+   'scrapers.pipelines.CsvPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

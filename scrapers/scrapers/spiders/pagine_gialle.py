@@ -30,15 +30,13 @@ class PagineGialleCrawler(scrapy.Spider):
         for business in business_links:
             try:
                 schema_data = self.mde.extract(business.extract())[0]
-                location = schema_data.get('properties', dict()).get('location', dict()).get('value').split('\n')[0]
             except IndexError:
                 schema_data = dict()
-                location = None
             yield PagineGialleBusiness(
                 name=schema_data.get('properties', dict()).get('name', ''),
-                location=location,
+                location=schema_data.get('properties', dict()).get('location', dict()).get('value').split('\n')[0],
                 description=schema_data.get('properties', dict()).get('description'),
-                telephone=business.css('phone-label').extract_first(),
+                telephone=business.css('span.phone-label ::text').extract_first(),
                 website=business.css('a[data-pag="www"] ::attr(href)').extract_first(),
                 pagine_gialle_url=business.css('a[data-pag="vetrina"] ::attr(href)').extract_first().replace('//', ''),
                 search_url=self.start_urls[0]
