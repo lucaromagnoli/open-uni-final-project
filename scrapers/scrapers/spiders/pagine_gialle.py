@@ -1,5 +1,3 @@
-import urllib.parse
-
 from extruct.w3cmicrodata import MicrodataExtractor
 import scrapy
 import scrapy.exceptions
@@ -15,7 +13,8 @@ class PagineGialleCrawler(scrapy.Spider):
     def __init__(self, url, category, **kwargs):
         self.start_urls = [url]
         self.category = category
-        super().__init__(**kwargs)  # python3
+        self.filename = f'{self.name}_{category}'
+        super().__init__(**kwargs)
 
     def start_requests(self):
         for url in self.start_urls:

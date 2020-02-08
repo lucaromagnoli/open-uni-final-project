@@ -8,6 +8,7 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import os
 
 BOT_NAME = 'scrapers'
 
@@ -65,8 +66,15 @@ CONCURRENT_REQUESTS = 8
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+   'scrapers.pipelines.ProcessProduct': 400,
    'scrapers.pipelines.CsvPipeline': 300,
+   'scrapy.pipelines.images.ImagesPipeline': 1
 }
+IMAGES_STORE = 's3://rossi-rei-data/manufacturers/pictures/'
+IMAGES_STORE_S3_ACL = 'public-read'
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

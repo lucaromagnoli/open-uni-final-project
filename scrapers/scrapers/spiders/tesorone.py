@@ -1,8 +1,11 @@
+import json
 import re
 
 from extruct.w3cmicrodata import MicrodataExtractor
 import scrapy
 import scrapy.exceptions
+from scrapy.selector import Selector
+from scrapy.loader import ItemLoader
 
 from ..items import Product
 from ..pipelines import ProcessProduct
@@ -30,23 +33,21 @@ class TesoroneCrawler(scrapy.Spider):
 
     def parse_item(self, response):
         schema_data = self.mde.extract(response.body)[0]
-        impage_pattern = re.compile(
-            r'(https:\\/\\/www.tesorone.it\\/pub\\/media\\/catalog\\/product\\/cache\\/\\/960x720\\/.*.jpg)'
+        image_data = json.loads(
+            response.xpath("//script[contains(., 'mage/gallery/gallery')]/text()").extract_first().replace('\n', '')
         )
-        try:
-            price = schema_data['properties']['offers'][0]['properties']['price']
-            currency = schema_data['properties']['offers'][0]['properties']['priceCurrency']
-        except KeyError:
-            price = schema_data['properties']['offers']['properties']['price']
-            currency = schema_data['properties']['offers']['properties']['priceCurrency']
-        yield Product(
-            url=response.url,
-            name=schema_data['properties']['name'],
-            description=schema_data['properties']['description'],
-            price=price,
-            currency=currency,
-            sku=schema_data['properties']['sku'],
-            image_urls=[
-                re.search(impage_pattern, response.text).group(1).replace('\\', '')
-            ]
+        image_pattern = re.compile(
+            r'"(https:\\/\\/www.tesorone.it\\/pub\\/media\\/catalog\\/product\\/cache\\/\\/960x720\\/.*.jpg)"'
         )
+        item = ItemLoader(item=Product(), response=response)
+        item.add_value('url', response.url)
+        item.add_value('name', schema_data['properties']['name'])
+        item.add_css('price', 'meta[property="product:price:amount"]::attr(content)')
+        item.add_value('currency', 'EUR')
+        item.add_value('description', schema_data['properties']['description'].replace('\n', ''))
+        item.add_value('sku', schema_data['properties']['sku'])
+        item.add_value(
+            'image_urls',
+            [image_data['[data-gallery-role=gallery-placeholder]']['mage/gallery/gallery']['data'][0]['full']]
+        )
+        yield item.load_item()
