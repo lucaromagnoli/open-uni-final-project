@@ -51,7 +51,7 @@ class CsvPipeline(object):
     def open_spider(self, spider):
         filepath = os.path.join(
             self.data_dir,
-            f'{spider.filename}_{datetime.datetime.utcnow().strftime("%Y-%m-%d-%H-%M")}.csv'
+            f'{spider.name}_{datetime.datetime.utcnow().strftime("%Y-%m-%d-%H-%M")}.csv'
         )
         self.file = open(filepath, 'wb')
         self.exporter = TSVItemExporter(self.file, encoding='utf-16')

@@ -4,7 +4,6 @@ import re
 from extruct.w3cmicrodata import MicrodataExtractor
 import scrapy
 import scrapy.exceptions
-from scrapy.selector import Selector
 from scrapy.loader import ItemLoader
 
 from ..items import Product
@@ -35,9 +34,6 @@ class TesoroneCrawler(scrapy.Spider):
         schema_data = self.mde.extract(response.body)[0]
         image_data = json.loads(
             response.xpath("//script[contains(., 'mage/gallery/gallery')]/text()").extract_first().replace('\n', '')
-        )
-        image_pattern = re.compile(
-            r'"(https:\\/\\/www.tesorone.it\\/pub\\/media\\/catalog\\/product\\/cache\\/\\/960x720\\/.*.jpg)"'
         )
         item = ItemLoader(item=Product(), response=response)
         item.add_value('url', response.url)
