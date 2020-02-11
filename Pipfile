@@ -17,6 +17,8 @@ s3fs = "*"
 Django = "*"
 scrapy = "*"
 extruct = "*"
+pillow = "*"
+scrapy-splash = "*"
 
 [requires]
 python_version = "3.7"

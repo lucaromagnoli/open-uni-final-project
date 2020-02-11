@@ -72,8 +72,8 @@ DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'scrapers.pipelines.ProcessProduct': 400,
-   'scrapers.pipelines.CsvPipeline': 300,
+   'scrapers.pipelines.ProcessProduct': 300,
+   'scrapers.pipelines.CsvPipeline': 400,
    'scrapy.pipelines.images.ImagesPipeline': 1
 }
 IMAGES_STORE = 's3://rossi-rei-data/manufacturers/pictures/'

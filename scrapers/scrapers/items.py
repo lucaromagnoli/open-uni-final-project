@@ -26,6 +26,8 @@ class Product(scrapy.Item):
     sku = scrapy.Field(output_processor=TakeFirst())
     dimensions = scrapy.Field(output_processor=TakeFirst())
     weight = scrapy.Field(output_processor=TakeFirst())
+    color = scrapy.Field(output_processor=TakeFirst())
+    material = scrapy.Field(output_processor=TakeFirst())
     price = scrapy.Field(output_processor=TakeFirst())
     currency = scrapy.Field(output_processor=TakeFirst())
     description = scrapy.Field(output_processor=TakeFirst())
