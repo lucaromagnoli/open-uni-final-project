@@ -28,7 +28,6 @@ class Crawler(scrapy.Spider):
                 yield scrapy.Request(url, self.parse_item)
 
     def parse_item(self, response):
-        print(0)
         try:
             for elem in response.css('div.tile'):
                 name_elem = elem.css('ul.crp-light-gallery ::attr(data-sub-html)').get()
