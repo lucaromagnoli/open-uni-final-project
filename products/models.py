@@ -19,8 +19,8 @@ class Category(models.Model):
         return self.name
 
 
-class Type(models.Model):
-    name = models.CharField(max_length=64)
+class Color(models.Model):
+    name = models.CharField(max_length=128)
 
     def __str__(self):
         return self.name
@@ -33,22 +33,6 @@ class DesignDetail(models.Model):
         return self.name
 
 
-class CategoryType(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    type = models.ForeignKey(Type, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.category}| {self.type}'
-
-
-class CategoryDesignDetail(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    design_detail = models.ForeignKey(DesignDetail, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.category} | {self.design_detail}'
-
-
 class Material(models.Model):
     name = models.CharField(max_length=128)
 
@@ -56,8 +40,8 @@ class Material(models.Model):
         return self.name
 
 
-class Color(models.Model):
-    name = models.CharField(max_length=128)
+class Type(models.Model):
+    name = models.CharField(max_length=64)
 
     def __str__(self):
         return self.name
@@ -74,7 +58,7 @@ class Product(models.Model):
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     gender = models.CharField(max_length=2, choices=GENDER_CHOICES)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    product_types = models.ManyToManyField(CategoryType)
+    type = models.ForeignKey(Type, on_delete=models.CASCADE)
     design_details = models.ManyToManyField(CategoryDesignDetail)
     colors = models.ManyToManyField(Color)
     materials = models.ManyToManyField(Material)
