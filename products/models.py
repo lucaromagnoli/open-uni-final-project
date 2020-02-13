@@ -41,7 +41,7 @@ class Material(models.Model):
 
 
 class Type(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, blank=True)
 
     def __str__(self):
         return self.name
@@ -59,7 +59,7 @@ class Product(models.Model):
     gender = models.CharField(max_length=2, choices=GENDER_CHOICES)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
-    design_details = models.ManyToManyField(CategoryDesignDetail)
+    design_details = models.ManyToManyField(DesignDetail)
     colors = models.ManyToManyField(Color)
     materials = models.ManyToManyField(Material)
     sku = models.CharField(max_length=20, blank=True)
@@ -70,14 +70,6 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.title} | {self.manufacturer} | {self.category}'
-
-    def clean(self):
-        for t in self.product_types.objects.all():
-            if t.category != self.category:
-                raise ValidationError(f'Invalid product type: {t} for product with category {self.category}')
-        for d in self.design_details.objects.all():
-            if self.category != d.category:
-                raise ValidationError(f'Invalid design detail: {d} for product with category {self.category}')
 
 
 class ProductImage(models.Model):
