@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Manufacturer(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     website = models.URLField()
     city = models.CharField(max_length=200, blank=True)
     country = models.CharField(max_length=200, blank=True)
@@ -13,35 +13,35 @@ class Manufacturer(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Color(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class DesignDetail(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Material(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Type(models.Model):
-    name = models.CharField(max_length=64, blank=True)
+    name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
@@ -59,8 +59,8 @@ class Product(models.Model):
     gender = models.CharField(max_length=2, choices=GENDER_CHOICES)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE)
     design_details = models.ManyToManyField(DesignDetail)
-    colors = models.ManyToManyField(Color)
     materials = models.ManyToManyField(Material)
     sku = models.CharField(max_length=20, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, blank=True)
