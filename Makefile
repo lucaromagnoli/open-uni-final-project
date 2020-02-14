@@ -1,8 +1,13 @@
+.PHONY: manage migrate migrations djangoshell
+
+manage:
+	docker-compose exec web python manage.py ${args}
+
 migrate:
 	docker-compose exec web python manage.py migrate ${args}
 
-makemigrations:
+migrations:
 	docker-compose exec web python manage.py makemigrations ${args}
 
-shell:
+djangoshell:
 	docker-compose exec web python manage.py shell
