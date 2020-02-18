@@ -4,9 +4,9 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/items.html
-
+from babel.numbers import parse_decimal
 import scrapy
-from scrapy.loader.processors import Join, MapCompose, TakeFirst
+from scrapy.loader.processors import Join, MapCompose, TakeFirst, Compose
 
 
 class PagineGialleBusiness(scrapy.Item):
@@ -19,6 +19,10 @@ class PagineGialleBusiness(scrapy.Item):
     search_url = scrapy.Field()
 
 
+def parse_price(price):
+    return parse_decimal(price, locale='it')
+
+
 class Product(scrapy.Item):
     url = scrapy.Field(output_processor=TakeFirst())
     unique_id = scrapy.Field(output_processor=TakeFirst())
@@ -28,7 +32,7 @@ class Product(scrapy.Item):
     weight = scrapy.Field(output_processor=TakeFirst())
     color = scrapy.Field(output_processor=TakeFirst())
     material = scrapy.Field(output_processor=TakeFirst())
-    price = scrapy.Field(output_processor=TakeFirst())
+    price = scrapy.Field(input_processor=MapCompose(parse_price), output_processor=TakeFirst())
     currency = scrapy.Field(output_processor=TakeFirst())
     description = scrapy.Field(output_processor=TakeFirst())
     image_urls = scrapy.Field()
