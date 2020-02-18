@@ -1,12 +1,9 @@
-from babel.numbers import parse_decimal
-
-from extruct.w3cmicrodata import MicrodataExtractor
 import scrapy
 import scrapy.exceptions
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import TakeFirst, MapCompose, Join, Compose
 
-from ..items import Product
+from ..items import Product, parse_price
 from ..pipelines import ProcessProduct
 
 
@@ -20,14 +17,13 @@ def parse_description(items):
     return desc.replace('\xa0', '').strip()
 
 
-class MandolesiLoader(ItemLoader):
+class CustomLoader(ItemLoader):
     dimensions_out = Compose(pair_items)
     description_in = Compose(parse_description)
 
 
 class Crawler(scrapy.Spider):
     name = 'mandolesi'
-    mde = MicrodataExtractor()
     pipeline = {ProcessProduct}
 
     def __init__(self, **kwargs):
@@ -43,7 +39,7 @@ class Crawler(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse_item)
 
     def parse_item(self, response):
-        item = MandolesiLoader(item=Product(), response=response)
+        item = CustomLoader(item=Product(), response=response)
         item.add_value('url', response.url)
         item.add_css('name', 'h1.product_title.entry-title ::text')
         item.add_css('price', 'div.summary.entry-summary span.woocommerce-Price-amount.amount::text')

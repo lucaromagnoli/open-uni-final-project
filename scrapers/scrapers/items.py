@@ -19,21 +19,22 @@ class PagineGialleBusiness(scrapy.Item):
     search_url = scrapy.Field()
 
 
-def parse_price(price):
-    return parse_decimal(price, locale='it')
+def parse_price(price, loader_context):
+    locale = loader_context['locale']
+    return parse_decimal(price, locale)
 
 
 class Product(scrapy.Item):
-    url = scrapy.Field(output_processor=TakeFirst())
-    unique_id = scrapy.Field(output_processor=TakeFirst())
-    name = scrapy.Field(output_processor=TakeFirst())
-    sku = scrapy.Field(output_processor=TakeFirst())
-    dimensions = scrapy.Field(output_processor=TakeFirst())
-    weight = scrapy.Field(output_processor=TakeFirst())
-    color = scrapy.Field(output_processor=TakeFirst())
-    material = scrapy.Field(output_processor=TakeFirst())
+    url = scrapy.Field(input_processor=MapCompose(str.strip), output_processor=TakeFirst())
+    unique_id = scrapy.Field(input_processor=MapCompose(str.strip), output_processor=TakeFirst())
+    name = scrapy.Field(input_processor=MapCompose(str.strip), output_processor=TakeFirst())
+    sku = scrapy.Field(input_processor=MapCompose(str.strip), output_processor=TakeFirst())
+    dimensions = scrapy.Field(input_processor=MapCompose(str.strip), output_processor=TakeFirst())
+    weight = scrapy.Field(input_processor=MapCompose(str.strip), output_processor=TakeFirst())
+    color = scrapy.Field(input_processor=MapCompose(str.strip), output_processor=TakeFirst())
+    material = scrapy.Field(input_processor=MapCompose(str.strip), output_processor=TakeFirst())
     price = scrapy.Field(input_processor=MapCompose(parse_price), output_processor=TakeFirst())
     currency = scrapy.Field(output_processor=TakeFirst())
-    description = scrapy.Field(output_processor=TakeFirst())
+    description = scrapy.Field(input_processor=MapCompose(str.strip), output_processor=TakeFirst())
     image_urls = scrapy.Field()
     images = scrapy.Field(output_processor=TakeFirst())
