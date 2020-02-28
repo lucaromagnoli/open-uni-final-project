@@ -19,6 +19,8 @@ scrapy = "*"
 extruct = "*"
 pillow = "*"
 scrapy-splash = "*"
+babel = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
