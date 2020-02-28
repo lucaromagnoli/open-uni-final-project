@@ -1,4 +1,4 @@
-.PHONY: manage migrate migrations djangoshell
+.PHONY: manage migrate migrations djangoshell flush taxonomy
 
 manage:
 	docker-compose exec web python manage.py ${args}
@@ -11,3 +11,12 @@ migrations:
 
 djangoshell:
 	docker-compose exec web python manage.py shell
+
+flush:
+	docker-compose exec web python manage.py flush
+
+taxonomy:
+	docker-compose exec web python manage.py populate_taxonomy --file="/code/products/management/commands/taxonomy.csv"
+
+server:
+	docker-compose up; docker-compose up -d; docker-compose exec web python manage.py runserver ${args}
