@@ -1,4 +1,8 @@
 from django.core.exceptions import ValidationError
+from django.utils.html import format_html, format_html_join
+from django.utils.safestring import mark_safe
+
+
 from django.db import models
 
 
@@ -20,7 +24,7 @@ class Category(models.Model):
 
 
 class Color(models.Model):
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
@@ -34,17 +38,36 @@ class DesignDetail(models.Model):
 
 
 class Material(models.Model):
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Type(models.Model):
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
+
+
+class CategoryDesignDetail(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    design_detail = models.ForeignKey(DesignDetail, on_delete=models.CASCADE)
+
+
+class CategoryMaterial(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+
+
+class CategoryType(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    type = models.ForeignKey(Type, on_delete=models.CASCADE)
+
+
+class ProductGroup(models.Model):
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
 
 
 class Product(models.Model):
@@ -54,22 +77,38 @@ class Product(models.Model):
         ('W', 'women')
     ]
     title = models.CharField(max_length=200)
-    unique_id = models.CharField(max_length=32)
+    product_url = models.URLField(max_length=200)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     gender = models.CharField(max_length=2, choices=GENDER_CHOICES)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    type = models.ForeignKey(Type, on_delete=models.CASCADE)
-    color = models.ForeignKey(Color, on_delete=models.CASCADE)
-    design_details = models.ManyToManyField(DesignDetail)
-    materials = models.ManyToManyField(Material)
-    sku = models.CharField(max_length=20, blank=True)
-    price = models.DecimalField(max_digits=6, decimal_places=2, blank=True)
-    currency = models.CharField(max_length=4, blank=True)
-    dimensions = models.CharField(max_length=20, blank=True)
-    weight = models.CharField(max_length=20, blank=True)
+    type = models.ForeignKey(CategoryType, on_delete=models.CASCADE, blank=True, null=True)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, blank=True, null=True)
+    design_details = models.ManyToManyField(CategoryDesignDetail, blank=True)
+    materials = models.ManyToManyField(CategoryMaterial, blank=True)
+    sku = models.CharField(max_length=200, blank=True, null=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    currency = models.CharField(max_length=4, blank=True, null=True)
+    dimensions = models.CharField(max_length=200, blank=True, null=True)
+    weight = models.CharField(max_length=200, blank=True, null=True)
+    group = models.ForeignKey(ProductGroup, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return f'{self.title} | {self.manufacturer} | {self.category}'
+
+    def get_images(self):
+        return (p.name for p in self.productimage_set.all())
+
+    @staticmethod
+    def image_path(name):
+        return f'https://rossi-rei-data.s3.us-east-2.amazonaws.com/manufacturers/pictures/{name}'
+
+    def product_images(self):
+        """Method to return store image for admin panel"""
+
+        images = ''
+        for img in self.get_images():
+            images += f'<img src="{self.image_path(img)}" height="150" width="150"/>'
+        return format_html("".join(images))
 
 
 class ProductImage(models.Model):
