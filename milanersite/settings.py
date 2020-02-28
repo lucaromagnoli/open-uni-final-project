@@ -87,7 +87,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -126,5 +125,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Activate Django-Heroku.
+# Activate Django-Heroku
 django_heroku.settings(locals())
