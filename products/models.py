@@ -55,15 +55,24 @@ class CategoryDesignDetail(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     design_detail = models.ForeignKey(DesignDetail, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.category.name} | {self.design_detail.name}'
+
 
 class CategoryMaterial(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.category.name} | {self.material.name}'
+
 
 class CategoryType(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.category.name} | {self.type.name}'
 
 
 class ProductGroup(models.Model):
@@ -100,7 +109,7 @@ class Product(models.Model):
 
     @staticmethod
     def image_path(name):
-        return f'https://rossi-rei-data.s3.us-east-2.amazonaws.com/manufacturers/pictures/{name}'
+        return f'https://rossi-rei-data.s3.us-east-2.amazonaws.com/manufacturers/pictures/full/{name}'
 
     def product_images(self):
         """Method to return store image for admin panel"""
