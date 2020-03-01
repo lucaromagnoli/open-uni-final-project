@@ -13,6 +13,11 @@ from products import models
 
 class Command(BaseCommand):
     help = 'Populate raw product from the scraper data set'
+    gender_lookup = {
+        'men': 'M',
+        'neutral': 'N',
+        'women': 'W'
+    }
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -44,14 +49,35 @@ class Command(BaseCommand):
             return None
 
     @staticmethod
-    def get_materials(materials):
+    def get_materials(category, materials):
         mat_objs = []
         for m in materials.split(','):
             try:
-                mat_objs.append(models.Material.objects.get(name=m.lower()))
+                mat_objs.append(
+                    models.CategoryMaterial.objects.get(category_pk=category.id, material__name=m)
+                )
             except ObjectDoesNotExist:
                 continue
         return mat_objs
+
+    @staticmethod
+    def get_design_details(category, design_details):
+        dd_objs = []
+        for d in design_details.split(','):
+            try:
+                dd_objs.append(
+                    models.CategoryDesignDetail.objects.get(category_pk=category.id, design_detail__name=d)
+                )
+            except ObjectDoesNotExist:
+                continue
+        return dd_objs
+
+    @staticmethod
+    def get_type(category, ptype):
+        try:
+            return models.CategoryType.objects.get(category_pk=category.id, type__name=ptype)
+        except ObjectDoesNotExist:
+            return None
 
     @staticmethod
     def get_images(images):
@@ -78,6 +104,7 @@ class Command(BaseCommand):
                 category=category,
                 product_url=row.url,
                 manufacturer=manufacturer,
+                gender=self.gender_lookup.get(row.gender),
                 description=row.description if row.description else '',
                 currency=row.currency if row.currency else '',
                 price=row.price if row.price else None,
@@ -87,11 +114,12 @@ class Command(BaseCommand):
                 sku=row.sku if row.sku else '',
             )
             product.save()
-            print(product)
-            product.materials.set(self.get_materials(row.material))
+            product.materials.set(self.get_materials(category, row.material))
+            product.design_details.set(self.get_design_details(category, row.design))
             models.ProductImage.objects.bulk_create([
                 models.ProductImage(product=product, name=name) for name in self.get_images(row.images)
             ])
+            print(product)
 
     def handle(self, *args, **options):
         filename = options['file']
