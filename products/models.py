@@ -100,7 +100,6 @@ class Product(models.Model):
     dimensions = models.CharField(max_length=200, blank=True)
     weight = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
-    group = models.ForeignKey(ProductGroup, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f'{self.title} | {self.manufacturer} | {self.category}'
