@@ -3,6 +3,7 @@ import ast
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.db.utils import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 import pandas as pd
 
@@ -47,7 +48,7 @@ class Command(BaseCommand):
         mat_objs = []
         for m in materials.split(','):
             try:
-                mat_objs.append(models.Material.objects.get(name=m.split().lower()))
+                mat_objs.append(models.Material.objects.get(name=m.lower()))
             except ObjectDoesNotExist:
                 continue
         return mat_objs
@@ -56,15 +57,20 @@ class Command(BaseCommand):
     def get_images(images):
         img_list = []
         for img in ast.literal_eval(images):
-            img_list.append(img['path'].replace('full', ''))
+            img_list.append(img['path'].replace('full/', ''))
         return img_list
 
+    @staticmethod
+    def get_manufacturer(manuf_name, website):
+        try:
+            manufacturer = models.Manufacturer(name=manuf_name, website=website)
+            manufacturer.save()
+            return manufacturer
+        except IntegrityError:
+            return models.Manufacturer.objects.get(name=manuf_name, website=website)
+
     @transaction.atomic
-    def _populate(self, filename, manuf_name, cat_name):
-        df = pd.read_csv(filename)
-        website = self.get_manufacturer_website(df['url'][0])
-        manufacturer = models.Manufacturer(name=manuf_name, website=website)
-        manufacturer.save()
+    def _populate(self, df, manufacturer, cat_name):
         category = models.Category.objects.get(name=cat_name)
         for row in df.itertuples():
             product = models.Product(
@@ -81,11 +87,20 @@ class Command(BaseCommand):
                 sku=row.sku if row.sku else '',
             )
             product.save()
+            print(product)
             product.materials.set(self.get_materials(row.material))
             models.ProductImage.objects.bulk_create([
                 models.ProductImage(product=product, name=name) for name in self.get_images(row.images)
             ])
 
     def handle(self, *args, **options):
-        self._populate(options['file'], options['manufacturer'], options['locale'])
+        filename = options['file']
+        df = pd.read_csv(
+            f's3://rossi-rei-data/manufacturers/data/{filename}',
+            encoding='utf-16',
+            sep='\t',
+            engine='python')
+        website = self.get_manufacturer_website(df['url'][0])
+        manufacturer = self.get_manufacturer(options['manufacturer'], website)
+        self._populate(df, manufacturer, options['category'])
         print('done')
