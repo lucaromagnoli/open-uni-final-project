@@ -86,7 +86,7 @@ class Product(models.Model):
         ('W', 'women')
     ]
     title = models.CharField(max_length=200)
-    product_url = models.URLField(max_length=200)
+    product_url = models.URLField(max_length=200, unique=True)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     gender = models.CharField(max_length=2, choices=GENDER_CHOICES, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
