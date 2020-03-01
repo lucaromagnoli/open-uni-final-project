@@ -75,7 +75,8 @@ class Command(BaseCommand):
                         manufacturer=manufacturer,
                         gender=self.gender_lookup.get(row.gender, 'N'),
                         category=category,
-                        type=models.CategoryType.objects.get(type__name=row.type, category__name=row.category) if row.type else None,
+                        type=models.CategoryType.objects.get(
+                            type__name=row.type, category__name=row.category) if row.type else None,
                         color=models.Color.objects.get(name=row.color.split(',')[0]) if row.color else None,
                         sku=row.sku if row.sku else None,
                         price=parse_decimal(row.price, locale=locale) if row.price else None,
