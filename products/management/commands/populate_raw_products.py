@@ -99,31 +99,31 @@ class Command(BaseCommand):
     @transaction.atomic
     def _populate(self, df, manufacturer, cat_name):
         for row in df.itertuples():
-            if row.category:
+            if getattr('category', row, None):
                 category = models.Category.objects.get(name=row.category)
             else:
                 category = models.Category.objects.get(name=cat_name)
+            ptype = getattr(row, 'type', None)
+            color = getattr(row, 'color', None)
             product = models.Product(
                 title=row.name,
                 category=category,
                 product_url=row.url,
                 manufacturer=manufacturer,
                 gender=self.gender_lookup.get(row.gender),
-                type=self.get_type(category, row.type),
+                type=self.get_type(category, ptype) if ptype else None,
                 description=row.description if row.description else '',
                 currency=row.currency if row.currency else '',
                 price=row.price if row.price else None,
-                color=self.get_color(row.color),
+                color=self.get_color(color) if color else None ,
                 dimensions=row.dimensions if row.dimensions else '',
                 weight=row.weight if row.weight else '',
                 sku=row.sku if row.sku else '',
             )
             product.save()
             product.materials.set(self.get_materials(category, row.material))
-            try:
+            if getattr(row, 'design_details', None):
                 product.design_details.set(self.get_design_details(category, row.design_details))
-            except:
-                print(row.design_details)
             models.ProductImage.objects.bulk_create([
                 models.ProductImage(product=product, name=name) for name in self.get_images(row.images)
             ])
