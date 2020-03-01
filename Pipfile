@@ -25,6 +25,7 @@ babel = "*"
 gunicorn = "*"
 django-heroku = "*"
 dj-database-url = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.7"
