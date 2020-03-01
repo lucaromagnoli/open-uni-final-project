@@ -99,7 +99,7 @@ class Command(BaseCommand):
     @transaction.atomic
     def _populate(self, df, manufacturer, cat_name):
         for row in df.itertuples():
-            if getattr('category', row, None):
+            if getattr(row, 'category', None):
                 category = models.Category.objects.get(name=row.category)
             else:
                 category = models.Category.objects.get(name=cat_name)
