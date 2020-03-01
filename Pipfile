@@ -4,13 +4,15 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+jupyter = "*"
+notebook = "*"
+pandas = "*"
 
 [packages]
 boto3 = "*"
 bs4 = "*"
 html5lib = "*"
 ipython = "*"
-pandas = "*"
 psycopg2 = "*"
 requests = "*"
 s3fs = "*"
@@ -22,6 +24,7 @@ scrapy-splash = "*"
 babel = "*"
 gunicorn = "*"
 django-heroku = "*"
+dj-database-url = "*"
 
 [requires]
 python_version = "3.7"
