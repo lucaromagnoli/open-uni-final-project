@@ -105,12 +105,13 @@ class Command(BaseCommand):
                 category = models.Category.objects.get(name=cat_name)
             ptype = getattr(row, 'type', None)
             color = getattr(row, 'color', None)
+            gender = getattr(row, 'gender', None)
             product = models.Product(
                 title=row.name,
                 category=category,
                 product_url=row.url,
                 manufacturer=manufacturer,
-                gender=self.gender_lookup.get(row.gender),
+                gender=self.gender_lookup.get(gender),
                 type=self.get_type(category, ptype) if ptype else None,
                 description=row.description if row.description else '',
                 currency=row.currency if row.currency else '',
@@ -121,9 +122,12 @@ class Command(BaseCommand):
                 sku=row.sku if row.sku else '',
             )
             product.save()
-            product.materials.set(self.get_materials(category, row.material))
-            if getattr(row, 'design_details', None):
-                product.design_details.set(self.get_design_details(category, row.design_details))
+            material = getattr(row, 'material', None)
+            if material:
+                product.materials.set(self.get_materials(category, material))
+            design_details = getattr(row, 'design_details', None)
+            if design_details:
+                product.design_details.set(self.get_design_details(category, design_details))
             models.ProductImage.objects.bulk_create([
                 models.ProductImage(product=product, name=name) for name in self.get_images(row.images)
             ])
