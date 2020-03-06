@@ -85,15 +85,17 @@ class Product(models.Model):
         ('N', 'neutral'),
         ('W', 'women')
     ]
+
     title = models.CharField(max_length=200)
     product_url = models.URLField(max_length=200, unique=True)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     gender = models.CharField(max_length=2, choices=GENDER_CHOICES, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
-    type = models.ForeignKey(CategoryType, on_delete=models.CASCADE, null=True)
+    type = models.ForeignKey(
+        CategoryType, on_delete=models.CASCADE, null=True, limit_choices_to={'category__name': category.name})
     color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True)
-    design_details = models.ManyToManyField(CategoryDesignDetail)
-    materials = models.ManyToManyField(CategoryMaterial)
+    design_details = models.ManyToManyField(CategoryDesignDetail, limit_choices_to={'category__name': category.name})
+    materials = models.ManyToManyField(CategoryMaterial, limit_choices_to={'category__name': category.name})
     sku = models.CharField(max_length=200, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     currency = models.CharField(max_length=4, blank=True)
