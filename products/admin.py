@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from .models import Product, Manufacturer
-
+from .models import (
+    Product, Manufacturer, Material, Type, DesignDetail, CategoryDesignDetail, CategoryType, CategoryMaterial
+)
 
 class ProductAdmin(admin.ModelAdmin):
     fields = (
@@ -19,3 +20,10 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Manufacturer)
+admin.site.register(Material)
+admin.site.register(Type)
+admin.site.register(DesignDetail)
+admin.site.register(CategoryMaterial)
+admin.site.register(CategoryType)
+admin.site.register(CategoryDesignDetail)
+
