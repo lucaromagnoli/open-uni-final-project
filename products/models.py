@@ -56,11 +56,8 @@ class CategoryDesignDetail(models.Model):
         return f'{self.category.name} | {self.design_detail.name}'
 
     def validate_unique(self, exclude=None):
-        if (
-                CategoryDesignDetail
-                .objects.filter(category_id=self.category.id, design_detail_id=self.design_detail.id)
-                .exists()
-        ):
+        obj = CategoryDesignDetail.objects.filter(category_id=self.category.id, design_detail_id=self.design_detail.id)
+        if obj.exists():
             raise ValidationError(f'{self.__name__} {self.category.name} | {self.design_detail.name} already exist!')
 
 
@@ -72,11 +69,8 @@ class CategoryMaterial(models.Model):
         return f'{self.category.name} | {self.material.name}'
 
     def validate_unique(self, exclude=None):
-        if (
-                CategoryDesignDetail
-                        .objects.filter(category_id=self.category.id, design_detail_id=self.material.id)
-                        .exists()
-        ):
+        obj = CategoryMaterial.objects.filter(category_id=self.category.id, material_id=self.material.id)
+        if obj.exists():
             raise ValidationError(f'{self.__name__} {self.category.name} | {self.material.name} already exist!')
 
 
@@ -88,11 +82,8 @@ class CategoryType(models.Model):
         return f'{self.category.name} | {self.type.name}'
 
     def validate_unique(self, exclude=None):
-        if (
-                CategoryDesignDetail
-                        .objects.filter(category_id=self.category.id, design_detail_id=self.type.id)
-                        .exists()
-        ):
+        obj = CategoryType.objects.filter(category_id=self.category.id, type_id=self.type.id)
+        if obj.exists():
             raise ValidationError(f'{self.__name__} {self.category.name} | {self.type.name} already exist!')
 
 
