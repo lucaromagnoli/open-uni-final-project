@@ -4,6 +4,7 @@ from .models import (
     Product, Manufacturer, Material, Type, DesignDetail, CategoryDesignDetail, CategoryType, CategoryMaterial
 )
 
+
 class ProductAdmin(admin.ModelAdmin):
     fields = (
         'title',
