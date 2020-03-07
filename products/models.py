@@ -1,9 +1,6 @@
 from django.core.exceptions import ValidationError
-from django.utils.html import format_html, format_html_join
-from django.utils.safestring import mark_safe
-
-
 from django.db import models
+from django.utils.html import format_html
 
 
 class Manufacturer(models.Model):
@@ -58,6 +55,14 @@ class CategoryDesignDetail(models.Model):
     def __str__(self):
         return f'{self.category.name} | {self.design_detail.name}'
 
+    def validate_unique(self, exclude=None):
+        if (
+                CategoryDesignDetail
+                .objects.filter(category_id=self.category.id, design_detail_id=self.design_detail.id)
+                .exists()
+        ):
+            raise ValidationError(f'{self.__name__} {self.category.name} | {self.design_detail.name} already exist!')
+
 
 class CategoryMaterial(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -66,6 +71,14 @@ class CategoryMaterial(models.Model):
     def __str__(self):
         return f'{self.category.name} | {self.material.name}'
 
+    def validate_unique(self, exclude=None):
+        if (
+                CategoryDesignDetail
+                        .objects.filter(category_id=self.category.id, design_detail_id=self.material.id)
+                        .exists()
+        ):
+            raise ValidationError(f'{self.__name__} {self.category.name} | {self.material.name} already exist!')
+
 
 class CategoryType(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -73,6 +86,14 @@ class CategoryType(models.Model):
 
     def __str__(self):
         return f'{self.category.name} | {self.type.name}'
+
+    def validate_unique(self, exclude=None):
+        if (
+                CategoryDesignDetail
+                        .objects.filter(category_id=self.category.id, design_detail_id=self.type.id)
+                        .exists()
+        ):
+            raise ValidationError(f'{self.__name__} {self.category.name} | {self.type.name} already exist!')
 
 
 class ProductGroup(models.Model):
@@ -92,10 +113,10 @@ class Product(models.Model):
     gender = models.CharField(max_length=2, choices=GENDER_CHOICES, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     type = models.ForeignKey(
-        CategoryType, on_delete=models.CASCADE, null=True, limit_choices_to={'category__name': category.name})
+        CategoryType, on_delete=models.CASCADE, null=True)
     color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True)
-    design_details = models.ManyToManyField(CategoryDesignDetail, limit_choices_to={'category__name': category.name})
-    materials = models.ManyToManyField(CategoryMaterial, limit_choices_to={'category__name': category.name})
+    design_details = models.ManyToManyField(CategoryDesignDetail)
+    materials = models.ManyToManyField(CategoryMaterial)
     sku = models.CharField(max_length=200, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     currency = models.CharField(max_length=4, blank=True)
