@@ -1,4 +1,4 @@
-.PHONY: manage migrate migrations djangoshell flush taxonomy
+.PHONY: manage migrate migrations djangoshell flush taxonomy server populate heroku-populate
 
 manage:
 	docker-compose exec web python manage.py ${args}
@@ -13,7 +13,7 @@ djangoshell:
 	docker-compose exec web python manage.py shell
 
 flush:
-	docker-compose exec web python manage.py flush
+	docker-compose exec web python malatenage.py flush
 
 taxonomy:
 	docker-compose exec web python manage.py populate_taxonomy --file="/code/products/management/commands/taxonomy.csv"
@@ -23,3 +23,6 @@ server:
 
 populate:
 	docker-compose exec web python manage.py populate_raw_products --file=${file} --category=${category} --manufacturer=${manufacturer}
+
+heroku-populate:
+	heroku run python manage.py populate_raw_products --file=${file} --category=${category} --manufacturer=${manufacturer}
