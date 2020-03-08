@@ -132,7 +132,7 @@ class Product(models.Model):
 
         images = ''
         for img in self.get_images():
-            images += f'<img src="{self.image_path(img)}" height="150" width="150"/>'
+            images += f'<img src="{self.image_path(img)}" height="300" width="300"/>'
         return format_html("".join(images))
 
 
