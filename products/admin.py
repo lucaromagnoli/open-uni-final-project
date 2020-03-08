@@ -34,6 +34,7 @@ class ProductAdmin(admin.ModelAdmin):
         'materials'
     )
     readonly_fields = ('title', 'product_images')
+    list_filter = ('manufacturer', 'category')
 
 
 admin.site.register(Product, ProductAdmin)
