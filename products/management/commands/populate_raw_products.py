@@ -52,33 +52,36 @@ class Command(BaseCommand):
     @staticmethod
     def get_materials(category, materials):
         mat_objs = []
-        for m in materials.split(','):
-            try:
-                mat_objs.append(
-                    models.CategoryMaterial.objects.get(category_id=category.id, material__name=m)
-                )
-            except ObjectDoesNotExist:
-                continue
-        return mat_objs
+        if isinstance(materials, str):
+            for m in materials.split(','):
+                try:
+                    mat_objs.append(
+                        models.CategoryMaterial.objects.get(category_id=category.id, material__name=m)
+                    )
+                except ObjectDoesNotExist:
+                    continue
+            return mat_objs
 
     @staticmethod
     def get_design_details(category, design_details):
         dd_objs = []
-        for d in design_details.split(','):
-            try:
-                dd_objs.append(
-                    models.CategoryDesignDetail.objects.get(category_id=category.id, design_detail__name=d)
-                )
-            except ObjectDoesNotExist:
-                continue
-        return dd_objs
+        if isinstance(design_details, str):
+            for d in design_details.split(','):
+                try:
+                    dd_objs.append(
+                        models.CategoryDesignDetail.objects.get(category_id=category.id, design_detail__name=d)
+                    )
+                except ObjectDoesNotExist:
+                    continue
+            return dd_objs
 
     @staticmethod
     def get_type(category, ptype):
-        try:
-            return models.CategoryType.objects.get(category_id=category.id, type__name=ptype)
-        except ObjectDoesNotExist:
-            return None
+        if isinstance(ptype, str):
+            try:
+                return models.CategoryType.objects.get(category_id=category.id, type__name=ptype)
+            except ObjectDoesNotExist:
+                return None
 
     @staticmethod
     def get_images(images):
@@ -99,7 +102,7 @@ class Command(BaseCommand):
     @transaction.atomic
     def _populate(self, df, manufacturer, cat_name):
         for row in df.itertuples():
-            if getattr(row, 'category', None):
+            if getattr(row, 'category', None) is not None:
                 category = models.Category.objects.get(name=row.category)
             else:
                 category = models.Category.objects.get(name=cat_name)
@@ -123,10 +126,10 @@ class Command(BaseCommand):
             )
             product.save()
             material = getattr(row, 'material', None)
-            if material:
+            if material is not None:
                 product.materials.set(self.get_materials(category, material))
             design_details = getattr(row, 'design_details', None)
-            if design_details:
+            if design_details is not None:
                 product.design_details.set(self.get_design_details(category, design_details))
             models.ProductImage.objects.bulk_create([
                 models.ProductImage(product=product, name=name) for name in self.get_images(row.images)
@@ -140,9 +143,9 @@ class Command(BaseCommand):
                 f's3://rossi-rei-data/manufacturers/data/{filename}',
                 encoding='utf-16',
                 sep='\t',
-                engine='python')
+                engine='python').fillna('')
         except UnicodeError:
-            df = pd.read_csv(f's3://rossi-rei-data/manufacturers/data/{filename}')
+            df = pd.read_csv(f's3://rossi-rei-data/manufacturers/data/{filename}').fillna('')
         website = self.get_manufacturer_website(df['url'][0])
         manufacturer = self.get_manufacturer(options['manufacturer'], website)
         self._populate(df, manufacturer, options['category'])
