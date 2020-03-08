@@ -53,7 +53,7 @@ class CategoryDesignDetail(models.Model):
     design_detail = models.ForeignKey(DesignDetail, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.category.name} | {self.design_detail.name}'
+        return f'{self.design_detail.name}'
 
     def validate_unique(self, exclude=None):
         obj = CategoryDesignDetail.objects.filter(category_id=self.category.id, design_detail_id=self.design_detail.id)
@@ -67,7 +67,7 @@ class CategoryMaterial(models.Model):
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.category.name} | {self.material.name}'
+        return f'{self.material.name}'
 
     def validate_unique(self, exclude=None):
         obj = CategoryMaterial.objects.filter(category_id=self.category.id, material_id=self.material.id)
@@ -81,7 +81,7 @@ class CategoryType(models.Model):
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.category.name} | {self.type.name}'
+        return f'{self.type.name}'
 
     def validate_unique(self, exclude=None):
         obj = CategoryType.objects.filter(category_id=self.category.id, type_id=self.type.id)
