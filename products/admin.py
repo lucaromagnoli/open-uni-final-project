@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 
 from .models import (
@@ -5,14 +6,30 @@ from .models import (
 )
 
 
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['type', 'design_details', 'materials']
+
+    def __init__(self, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
+        self.fields['type'].queryset = CategoryType.objects.filter(
+            category_id=self.instance.category_id)
+        self.fields['design_details'].queryset = CategoryDesignDetail.objects.filter(
+            category_id=self.instance.category_id)
+        self.fields['materials'].queryset = CategoryMaterial.objects.filter(
+            category_id=self.instance.category_id)
+
+
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductForm
     fields = (
         'title',
         'product_images',
         'gender',
         'category',
-        'type',
         'color',
+        'type',
         'design_details',
         'materials'
     )
