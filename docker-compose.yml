@@ -12,6 +12,8 @@ services:
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
