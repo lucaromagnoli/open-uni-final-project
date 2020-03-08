@@ -25,6 +25,7 @@ class ProductAdmin(admin.ModelAdmin):
     form = ProductForm
     fields = (
         'title',
+        'product_url',
         'product_images',
         'gender',
         'category',
@@ -33,7 +34,7 @@ class ProductAdmin(admin.ModelAdmin):
         'design_details',
         'materials'
     )
-    readonly_fields = ('title', 'product_images')
+    readonly_fields = ('title', 'product_url', 'product_images')
     list_filter = ('manufacturer', 'category')
 
 
