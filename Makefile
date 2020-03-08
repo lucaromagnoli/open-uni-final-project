@@ -20,3 +20,6 @@ taxonomy:
 
 server:
 	docker-compose up; docker-compose up -d; docker-compose exec web python manage.py runserver ${args}
+
+populate:
+	docker-compose exec web python manage.py populate_raw_products --file=${file} --category=${category} --manufacturer=${manufacturer}
