@@ -26,13 +26,25 @@ def get_attributes_values_by_category(df, attribute, category):
 class Command(BaseCommand):
     help = 'Populate Taxonomy Models'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--file',
+            help='The s3 file to read data from',
+            required=True
+        )
+
     @staticmethod
     def _populate(model, values):
-        model.objects.bulk_create([model(name=value) for value in values])
+        # model.objects.bulk_create([model(name=value) for value in values])
+        for value in values:
+            obj, created = model.objects.get_or_create(name=value)
+            if created:
+                obj.save()
 
     @transaction.atomic
     def handle(self, *args, **options):
-        df = pd.read_csv('s3://rossi-rei-data/manufacturers/data/taxonomy.csv')
+        filename = options['file']
+        df = pd.read_csv(f's3://rossi-rei-data/manufacturers/data/{filename}')
         categories = df['Category'].unique().tolist()
         self._populate(Category, categories)
         colors = set(get_attributes_values_combined(df, 'Color'))
