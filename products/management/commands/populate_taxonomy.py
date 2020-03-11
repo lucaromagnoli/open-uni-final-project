@@ -1,6 +1,7 @@
 import os
 
 from django.core.management.base import BaseCommand
+from django.core.exceptions import ValidationError
 from django.db import transaction
 
 
@@ -65,4 +66,7 @@ class Command(BaseCommand):
                 for v in values:
                     v_obj = base_model.objects.get(name=v)
                     m_obj = model(**{'category': c_obj, argname: v_obj})
-                    m_obj.save()
+                    try:
+                        m_obj.save()
+                    except ValidationError:
+                        pass

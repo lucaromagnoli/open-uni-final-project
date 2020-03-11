@@ -63,7 +63,7 @@ class CategoryDesignDetail(models.Model):
 
     def save(self, *args, **kwargs):
         self.validate_unique()
-        super(self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class CategoryMaterial(models.Model):
@@ -80,7 +80,7 @@ class CategoryMaterial(models.Model):
 
     def save(self, *args, **kwargs):
         self.validate_unique()
-        super(self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class CategoryType(models.Model):
@@ -97,7 +97,7 @@ class CategoryType(models.Model):
 
     def save(self, *args, **kwargs):
         self.validate_unique()
-        super(self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class ProductGroup(models.Model):
