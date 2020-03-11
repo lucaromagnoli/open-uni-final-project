@@ -82,6 +82,10 @@ class Command(BaseCommand):
                 return models.CategoryType.objects.get(category_id=category.id, type__name=ptype)
             except ObjectDoesNotExist:
                 return None
+            except Exception as e:
+                print(e)
+                print(category, ptype)
+                raise
 
     @staticmethod
     def get_images(images):
