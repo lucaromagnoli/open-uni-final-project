@@ -53,7 +53,7 @@ class CategoryDesignDetail(models.Model):
     design_detail = models.ForeignKey(DesignDetail, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.category} | {self.design_detail.name}'
+        return f'{self.category.name} | {self.design_detail.name}'
 
     def validate_unique(self, exclude=None):
         obj = CategoryDesignDetail.objects.filter(category_id=self.category.id, design_detail_id=self.design_detail.id)
@@ -61,19 +61,26 @@ class CategoryDesignDetail(models.Model):
             raise ValidationError(
                 f'{type(self).__name__} {self.category.name} | {self.design_detail.name} already exist!')
 
+    def save(self, *args, **kwargs):
+        self.validate_unique()
+        super(self).save(*args, **kwargs)
+
 
 class CategoryMaterial(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.category} | {self.material.name}'
+        return f'{self.category.name} | {self.material.name}'
 
     def validate_unique(self, exclude=None):
         obj = CategoryMaterial.objects.filter(category_id=self.category.id, material_id=self.material.id)
         if obj.exists():
-            raise ValidationError(
-                f'{type(self).__name__} {self.category.name} | {self.material.name} already exist!')
+            raise ValidationError(f'{type(self).__name__} {self.category.name} | {self.material.name} already exist!')
+
+    def save(self, *args, **kwargs):
+        self.validate_unique()
+        super(self).save(*args, **kwargs)
 
 
 class CategoryType(models.Model):
@@ -81,12 +88,16 @@ class CategoryType(models.Model):
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.category} | {self.type.name}'
+        return f'{self.category.name} | {self.type.name}'
 
     def validate_unique(self, exclude=None):
         obj = CategoryType.objects.filter(category_id=self.category.id, type_id=self.type.id)
         if obj.exists():
             raise ValidationError(f'{type(self).__name__} {self.category.name} | {self.type.name} already exist!')
+
+    def save(self, *args, **kwargs):
+        self.validate_unique()
+        super(self).save(*args, **kwargs)
 
 
 class ProductGroup(models.Model):
