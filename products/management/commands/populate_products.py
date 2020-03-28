@@ -1,16 +1,16 @@
 import ast
+import urllib.parse
 
-from babel.numbers import parse_decimal
+import pandas as pd
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from django.db import transaction
-import pandas as pd
-
 
 from products import models
 
 
 class Command(BaseCommand):
-    help = 'Populate Products from file'
+    help = 'Populate raw product from the scraper data set'
     gender_lookup = {
         'men': 'M',
         'neutral': 'N',
@@ -20,7 +20,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             '--file',
-            help='The file to read data from',
+            help='The s3 file to read data from',
             required=True
         )
         parser.add_argument(
@@ -29,77 +29,137 @@ class Command(BaseCommand):
             required=True
         )
         parser.add_argument(
-            '--locale',
-            help='The locale for price decimal separators',
-            default='it'
+            '--category',
+            help='The category of the products',
+            required=False,
+            default=None
         )
 
-    @transaction.atomic
-    def _populate(self, filename, manuf_name, locale):
-        def get_design_details_from_df():
-            if row.design_details:
-                return row.design_details.split(',')
+    @staticmethod
+    def get_manufacturer_website(product_url):
+        parts = urllib.parse.urlparse(product_url)
+        return urllib.parse.urlunparse(
+            (parts.scheme, parts.netloc, '', '', '', ''))
 
-        def get_details_objs(_category, _details):
-            objs = []
-            for d in _details:
-                objs.append(models.CategoryDesignDetail.objects.get(category__name=_category, design_detail__name=d))
-            return objs
+    @staticmethod
+    def get_color(color):
+        try:
+            return models.Color.objects.get(name=color)
+        except ObjectDoesNotExist as e:
+            print(e, color)
+            return None
 
-        def get_materials_from_df():
-            if row.material:
-                return row.material.split(',')
-
-        def get_material_objs(_category, _materials):
-            objs = []
-            for m in _materials:
-                objs.append(models.CategoryMaterial.objects.get(category__name=_category, material__name=m))
-            return objs
-
-        df = pd.read_csv(filename).fillna('')
-        print(manuf_name)
-        manufacturer = models.Manufacturer.objects.get(name=manuf_name)
-        groups = df.groupby('group')
-        for k, v in groups:
-            product_group = models.ProductGroup(manufacturer=manufacturer)
-            product_group.save()
-            for row in v.itertuples():
+    @staticmethod
+    def get_materials(category, materials):
+        mat_objs = []
+        if isinstance(materials, str):
+            for m in materials.split(','):
                 try:
-                    images = [img['path'] for img in ast.literal_eval(row.images)]
-                    design_details = get_design_details_from_df()
-                    materials = get_materials_from_df()
-                    category = models.Category.objects.get(name=row.category) if row.category else None
-                    product = models.Product(
-                        title=row.title,
-                        product_url=row.url,
-                        manufacturer=manufacturer,
-                        gender=self.gender_lookup.get(row.gender, 'N'),
-                        category=category,
-                        type=models.CategoryType.objects.get(
-                            type__name=row.type, category__name=row.category) if row.type else None,
-                        color=models.Color.objects.get(name=row.color.split(',')[0]) if row.color else None,
-                        sku=row.sku if row.sku else None,
-                        price=parse_decimal(row.price, locale=locale) if row.price else None,
-                        currency=row.currency if row.currency else None,
-                        dimensions=row.dimensions if row.dimensions else None,
-                        weight=row.weight if row.weight else None,
-                        group=product_group if product_group else None
+                    mat_objs.append(
+                        models.CategoryMaterial.objects.get(
+                            category_id=category.id, material__name=m)
                     )
-                    product.save()
-                    if design_details:
-                        product.design_details.set(get_details_objs(row.category, design_details))
-                    if materials:
-                        product.materials.set(get_material_objs(row.category, materials))
-                    print(f'product saved: {product}')
-                    models.ProductImage.objects.bulk_create([
-                        models.ProductImage(product=product, name=name) for name in images
-                    ])
-                    print('saved images')
-                except Exception as e:
+                except ObjectDoesNotExist as e:
                     print(e)
-                    print(row)
-                    raise
+                    continue
+            return mat_objs
+
+    @staticmethod
+    def get_design_details(category, design_details):
+        dd_objs = []
+        if isinstance(design_details, str):
+            for d in design_details.split(','):
+                try:
+                    dd_objs.append(
+                        models.CategoryDesignDetail.objects.get(
+                            category_id=category.id, design_detail__name=d)
+                    )
+                except ObjectDoesNotExist as e:
+                    print(e)
+                    continue
+            return dd_objs
+
+    @staticmethod
+    def get_type(category, ptype):
+        if isinstance(ptype, str):
+            try:
+                return models.CategoryType.objects.get(
+                    category_id=category.id, type__name=ptype)
+            except ObjectDoesNotExist:
+                return None
+            except Exception as e:
+                print(e)
+                print(category, ptype)
+                raise
+
+    @staticmethod
+    def get_images(images):
+        img_list = []
+        for img in ast.literal_eval(images):
+            img_list.append(img['path'].replace('full/', ''))
+        return img_list
+
+    @staticmethod
+    def get_manufacturer(manuf_name, website):
+        try:
+            return models.Manufacturer.objects.get(name=manuf_name)
+        except ObjectDoesNotExist:
+            manufacturer = models.Manufacturer(name=manuf_name, website=website)
+            manufacturer.save()
+            return manufacturer
+
+    @transaction.atomic
+    def populate(self, df, manufacturer, cat_name):
+        for row in df.itertuples():
+            if getattr(row, 'category', None) is not None:
+                category = models.Category.objects.get(name=row.category)
+            else:
+                category = models.Category.objects.get(name=cat_name)
+            print(f'category: {category}')
+            ptype = getattr(row, 'type', None)
+            color = getattr(row, 'color', None)
+            gender = getattr(row, 'gender', None)
+            product = models.Product(
+                title=row.name,
+                category=category,
+                product_url=row.url,
+                manufacturer=manufacturer,
+                gender=self.gender_lookup.get(gender),
+                type=self.get_type(category, ptype) if ptype else None,
+                description=row.description if row.description else '',
+                currency=row.currency if row.currency else '',
+                price=row.price if row.price else None,
+                color=self.get_color(color) if color else None,
+                dimensions=row.dimensions if row.dimensions else '',
+                weight=row.weight if row.weight else '',
+                sku=row.sku if row.sku else '',
+            )
+            product.save()
+            material = getattr(row, 'material', None)
+            if material is not None:
+                product.materials.set(self.get_materials(category, material))
+            design_details = getattr(row, 'design_details', None)
+            if design_details is not None:
+                product.design_details.set(
+                    self.get_design_details(category, design_details))
+            models.ProductImage.objects.bulk_create([
+                models.ProductImage(product=product, name=name) for name in
+                self.get_images(row.images)
+            ])
+            print(product)
 
     def handle(self, *args, **options):
-        self._populate(options['file'], options['manufacturer'], options['locale'])
+        filename = options['file']
+        try:
+            df = pd.read_csv(
+                f's3://rossi-rei-data/manufacturers/data/{filename}',
+                encoding='utf-16',
+                sep='\t',
+                engine='python').fillna('')
+        except UnicodeError:
+            df = pd.read_csv(
+                f's3://rossi-rei-data/manufacturers/data/{filename}').fillna('')
+        website = self.get_manufacturer_website(df['url'][0])
+        manufacturer = self.get_manufacturer(options['manufacturer'], website)
+        self.populate(df, manufacturer, options['category'])
         print('done')
