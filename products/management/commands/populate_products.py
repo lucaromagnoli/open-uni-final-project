@@ -60,7 +60,7 @@ class Command(BaseCommand):
                             category_id=category.id, material__name=m)
                     )
                 except ObjectDoesNotExist as e:
-                    print(e)
+                    print(e, m)
                     continue
             return mat_objs
 
@@ -75,7 +75,7 @@ class Command(BaseCommand):
                             category_id=category.id, design_detail__name=d)
                     )
                 except ObjectDoesNotExist as e:
-                    print(e)
+                    print(e, d)
                     continue
             return dd_objs
 
@@ -88,7 +88,7 @@ class Command(BaseCommand):
             except ObjectDoesNotExist:
                 return None
             except Exception as e:
-                print(e)
+                print(e, ptype)
                 print(category, ptype)
                 raise
 
