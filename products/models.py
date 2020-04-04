@@ -124,7 +124,7 @@ class Product(models.Model):
     type = models.ForeignKey(
         CategoryType, on_delete=models.CASCADE, null=True)
     color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True)
-    design_details = models.ManyToManyField(CategoryDesignDetail)
+    design_details = models.ManyToManyField(CategoryDesignDetail, blank=True)
     materials = models.ManyToManyField(CategoryMaterial)
     sku = models.CharField(max_length=200, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
