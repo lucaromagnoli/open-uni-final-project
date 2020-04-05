@@ -26,6 +26,7 @@ gunicorn = "*"
 django-heroku = "*"
 dj-database-url = "*"
 pandas = "*"
+django-filter = "*"
 
 [requires]
 python_version = "3.7"
