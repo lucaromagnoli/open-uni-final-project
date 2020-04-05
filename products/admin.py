@@ -104,8 +104,8 @@ class ProductAdmin(admin.ModelAdmin, GotoNextAdminMixin):
 
             if qs:
                 response['Location'] += '?' + qs
+            obj.save()
             return response
-
         return super().response_change(request, obj)
 
 
