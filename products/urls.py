@@ -1,7 +1,10 @@
 from django.urls import path
+from django_filters.views import FilterView
 
-from . import views
+from .models import Product
+from .views import product_list
 
+app_name = 'milaner'
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', product_list, name='index'),
 ]
