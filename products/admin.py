@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 
 from .models import (
     Product, Manufacturer, Material, Type, DesignDetail, CategoryDesignDetail,
-    CategoryType, CategoryMaterial
+    CategoryType, CategoryMaterial, Color
 )
 
 
@@ -112,9 +112,9 @@ class ProductAdmin(admin.ModelAdmin, GotoNextAdminMixin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Manufacturer)
 admin.site.register(Material)
+admin.site.register(Color)
 admin.site.register(Type)
 admin.site.register(DesignDetail)
 admin.site.register(CategoryMaterial)
 admin.site.register(CategoryType)
 admin.site.register(CategoryDesignDetail)
-
