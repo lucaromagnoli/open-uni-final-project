@@ -76,6 +76,7 @@ class Command(BaseCommand):
                     )
                 except ObjectDoesNotExist as e:
                     print(e, d)
+                    print(design_details)
                     continue
             return dd_objs
 
