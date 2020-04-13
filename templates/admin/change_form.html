@@ -1,8 +1,13 @@
 {% extends 'admin/change_form.html' %}
 {% load i18n admin_urls %}
 {% block submit_buttons_bottom %}
-    {{ block.super }}
-    <div class="submit-row">
-            <input type="submit" value="Save and go to next product" name="_next_item">
-    </div>
+{{ block.super }}
+    {% url  'admin:products_product_change' object_id as the_url %}
+    {% if the_url == request.path %}
+
+            <div class="submit-row">
+                    <input type="submit" value="Save and go to next product" name="_next_item">
+            </div>
+    {% endif %}
 {% endblock %}
+
