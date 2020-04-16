@@ -9,7 +9,7 @@ urlpatterns = [
         '',
         FilterView.as_view(
             filterset_class=ProductFilter,
-            template_name='template.html'),
+            template_name='search_form.html'),
         name='index'
     ),
     path('ajax/load-types/', load_types, name='ajax_load_types'),
