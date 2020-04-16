@@ -29,3 +29,8 @@ def load_types(request):
     category_id = request.GET.get('category')
     types = CategoryType.objects.filter(category_id=category_id)
     return render(request, 'types_dropdown_list_options.html', {'types': types})
+
+
+def product_list(request):
+    f = ProductFilter(request.GET, queryset=Product.objects.all())
+    return render(request, 'product_filter.html', {'filter': f})
