@@ -26,7 +26,8 @@
     </form>
     <ul class="list-group shadow mt-4">
         {% for obj in filter.qs %}
-            <li class="list-group-item">{{ obj.title }}
+            <li class="list-group-item">
+                <a href="{% url 'milaner:product_detail' pk=obj.pk %}">{{ obj.title }}</a>
             <img src="{{ obj.main_image }}" class="img-thumbnail float-right" alt="product thumbnail" height="300" width="300">
             </li>
         {% endfor %}
