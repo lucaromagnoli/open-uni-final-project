@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h4 class="mt-2 mb-4">Search Products</h4>
+    <form method="GET" id="productForm"
+          data-types-url="{% url 'ajax_load_types' %}" novalidate>
+        {{ form|crispy }}
+        <div class="row">
+            <div class="col-6">
+                {{ filter.form.manufacturer|as_crispy_field }}
+            </div>
+            <div class="col-6">
+                {{ filter.form.gender|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                {{ filter.form.category|as_crispy_field }}
+            </div>
+            <div class="col-6">
+                {{ filter.form.type|as_crispy_field }}
+            </div>
+        </div>
+        {{ filter.form.title|as_crispy_field }}
+        <button type="submit" class="btn btn-dark">Search</button>
+    </form>
+    <ul class="list-group shadow mt-4">
+        {% for obj in filter.qs %}
+            <li class="list-group-item">{{ obj.title }}
+            <img src="{{ obj.main_image }}" class="img-thumbnail float-right" alt="product thumbnail" height="300" width="300">
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $("#id_category").change(function () {
+            let url = $("#productForm").attr("data-types-url");  // get the url of the `load_cities` view
+            let categoryId = $(this).val();  // get the selected country ID from the HTML input
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'category': categoryId       // add the country id to the GET parameters
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_type").html(data);  // replace the contents of the city input with the data that came from the server
+                }
+            });
+
+        });
+    </script>
+{% endblock %}
