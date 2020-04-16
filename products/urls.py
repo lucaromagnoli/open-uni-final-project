@@ -1,10 +1,16 @@
 from django.urls import path
 from django_filters.views import FilterView
 
-from .models import Product
-from .views import product_list
+from .views import ProductFilter, load_types
 
 app_name = 'milaner'
 urlpatterns = [
-    path('', product_list, name='index'),
+    path(
+        '',
+        FilterView.as_view(
+            filterset_class=ProductFilter,
+            template_name='template.html'),
+        name='index'
+    ),
+    path('ajax/load-types/', load_types, name='ajax_load_types'),
 ]
