@@ -137,19 +137,23 @@ class Product(models.Model):
         return f'{self.title} | {self.manufacturer} | {self.category}'
 
     def get_images(self):
-        return (p.name for p in self.productimage_set.all())
+        return [p.name for p in self.productimage_set.all()]
 
     @staticmethod
     def image_path(name):
         return f'https://rossi-rei-data.s3.us-east-2.amazonaws.com/manufacturers/pictures/full/{name}'
 
     def product_images(self):
-        """Method to return store image for admin panel"""
+        """Method to return store images for admin panel"""
 
         images = ''
         for img in self.get_images():
             images += f'<img src="{self.image_path(img)}" height="300" width="300"/>'
         return format_html("".join(images))
+
+    @property
+    def main_image(self):
+        return self.image_path(self.productimage_set.first().name)
 
 
 class ProductImage(models.Model):
