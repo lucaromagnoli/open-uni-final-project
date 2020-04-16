@@ -16,7 +16,7 @@ class ProductFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if 'category' in self.data:
+        if self.data.get('category'):
             category_id = int(self.data['category'])
             try:
                 self.filters['type'].queryset = CategoryType.objects.filter(category_id=category_id)
