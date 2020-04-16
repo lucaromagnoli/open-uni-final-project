@@ -3,7 +3,7 @@
 {% block content %}
     <h4 class="mt-2 mb-4">Search Products</h4>
     <form method="GET" id="productForm"
-          data-types-url="{% url 'ajax_load_types' %}" novalidate>
+          data-types-url="{% url 'milaner:ajax_load_types' %}" novalidate>
         {{ form|crispy }}
         <div class="row">
             <div class="col-6">
