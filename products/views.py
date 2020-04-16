@@ -13,6 +13,16 @@ class ProductFilter(django_filters.FilterSet):
         model = Product
         fields = ('manufacturer', 'gender', 'category', 'type')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if 'category' in self.data:
+            category_id = int(self.data['category'])
+            try:
+                self.filters['type'].queryset = CategoryType.objects.filter(category_id=category_id)
+            except (ValueError, TypeError):
+                pass
+
 
 def load_types(request):
     print(request)
