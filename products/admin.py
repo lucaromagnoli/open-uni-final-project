@@ -74,8 +74,8 @@ class GotoNextAdminMixin(object):
 
 
 class ProductAdmin(admin.ModelAdmin, GotoNextAdminMixin):
-    # form = ProductForm
-    # ordering = ['pk']
+    form = ProductForm
+    ordering = ['pk']
     fields = (
         'title',
         'product_url',
