@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'milanersite.urls'
+ROOT_URLCONF = 'products.urls'
 
 TEMPLATES = [
     {
