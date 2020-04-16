@@ -33,4 +33,9 @@ def load_types(request):
 
 def product_list(request):
     f = ProductFilter(request.GET, queryset=Product.objects.all())
-    return render(request, 'product_filter.html', {'filter': f})
+    return render(request, 'product_list.html', {'filter': f})
+
+
+def product_detail(request, pk):
+    product = Product.objects.get(pk=pk)
+    return render(request, 'product_detail.html', {'product': product})
