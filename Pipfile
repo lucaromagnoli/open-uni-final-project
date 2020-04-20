@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+ipython = "*"
 jupyter = "*"
 notebook = "*"
 pandas = "*"
@@ -12,7 +13,6 @@ pandas = "*"
 boto3 = "*"
 bs4 = "*"
 html5lib = "*"
-ipython = "*"
 psycopg2 = "*"
 requests = "*"
 s3fs = "*"
