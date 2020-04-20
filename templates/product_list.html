@@ -26,26 +26,26 @@
     </form>
     <ul class="list-group shadow mt-4">
         {% for obj in filter.qs %}
-            <li class="list-group-item">
-                <a href="{% url 'milaner:product_detail' pk=obj.pk %}">{{ obj.title }}</a>
+            <a class="list-group-item" href="{% url 'milaner:product_detail' pk=obj.pk %}">{{ obj.title }}
+                {{ obj.manufacturer.name }}
             <img src="{{ obj.main_image }}" class="img-thumbnail float-right" alt="product thumbnail" height="300" width="300">
-            </li>
+            </a>
         {% endfor %}
     </ul>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
         $("#id_category").change(function () {
-            let url = $("#productForm").attr("data-types-url");  // get the url of the `load_cities` view
-            let categoryId = $(this).val();  // get the selected country ID from the HTML input
+            let url = $("#productForm").attr("data-types-url");
+            let categoryId = $(this).val();
 
-            $.ajax({                       // initialize an AJAX request
-                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+            $.ajax({
+                url: url,
                 data: {
-                    'category': categoryId       // add the country id to the GET parameters
+                    'category': categoryId
                 },
-                success: function (data) {   // `data` is the return of the `load_cities` view function
-                    $("#id_type").html(data);  // replace the contents of the city input with the data that came from the server
+                success: function (data) {
+                    $("#id_type").html(data);
                 }
             });
 
