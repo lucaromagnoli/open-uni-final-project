@@ -6,3 +6,50 @@ body {
 ul {
     list-style-type: none;
 }
+
+.list-group-item {
+    margin: 0 0 3px 0;
+}
+
+a, a:hover,a:visited, a:focus {
+    color:#000000;
+    text-decoration:none;
+}
+
+.bg-menu:hover {
+    background-color:#0079C1;
+    color:#FFFFFF;
+}
+
+.clickable {
+    cursor:pointer;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 100px;
+  width: 100px;
+  outline: black;
+  background-size: 100%, 100%;
+  background-image: none;
+}
+
+.carousel-control-next-icon:after {
+  content: '>';
+  font-size: 55px;
+  color: dimgrey;
+}
+
+.carousel-control-prev-icon:after {
+  content: '<';
+  font-size: 55px;
+  color: dimgrey;
+}
+
+.img-carousel {
+    max-width: 50%;
+}
+
+.carousel-inner img {
+  margin: auto;
+}
