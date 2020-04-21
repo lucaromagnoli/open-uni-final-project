@@ -24,15 +24,25 @@
         {{ filter.form.title|as_crispy_field }}
         <button type="submit" class="btn btn-dark">Search</button>
     </form>
-    <ul class="list-group shadow mt-4">
+    <ul class="list-group">
         {% for obj in filter.qs %}
-            <a class="list-group-item" href="{% url 'milaner:product_detail' pk=obj.pk %}">{{ obj.title }}
-                {{ obj.manufacturer.name }}
-            <img src="{{ obj.main_image }}" class="img-thumbnail float-right" alt="product thumbnail" height="300" width="300">
-            </a>
+            <li class="media border rounded border-black mt-2 mb-2" >
+            <div class="media-body col-sm-8 pt-4 pl-4">
+                <a href="{% url 'milaner:product_detail' pk=obj.pk %}" >
+                    <span class="font-weight-bold">Product Title:</span> {{ obj.title }}
+                </a>
+                <div>
+                    <span class="font-weight-bold">Manufacturer:</span> {{ obj.manufacturer.name }}
+                </div>
+            </div>
+            <div class="col-sm-4 p-4">
+                <a href="{% url 'milaner:product_detail' pk=obj.pk %}">
+                    <img src="{{ obj.main_image }}" class="img-thumbnail float-right" alt="product thumbnail" height="300" width="300">
+                </a>
+            </div>
+            </li>
         {% endfor %}
     </ul>
-
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
         $("#id_category").change(function () {

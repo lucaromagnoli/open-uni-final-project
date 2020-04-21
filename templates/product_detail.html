@@ -1,23 +1,43 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>{{ product.title }}</h2>
-    <div id="carouselControls" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            {% for image in product.product_images %}
-                <div class="carousel-item{% if forloop.first %} active{% endif %}">
-                    <img class="d-block w-100" src="{{ image }}" alt="Third slide">
-                </div>
-            {% endfor %}
+    <div class="row mt-2 mb-2">
+        <div class="col-6 text-left"><h4><b>Product
+            Title:</b> {{ product.title }}</h4></div>
+        <div class="col-6 text-left"><h4>
+            <b>Manufacturer:</b> {{ product.manufacturer }}</h4></div>
+    </div>
+    <div class="row mt-2 mb-4">
+        <div class="col-3 text-left"><b>Category:</b> {{ product.category }}
         </div>
-        <a class="carousel-control-prev" href="#carouselControls" role="button"
-           data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselControls" role="button"
-           data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
+        <div class="col-3 text-left"><b>Type:</b> {{ product.type }}</div>
+        <div class="col-3 text-left text-capitalize">
+            <b>Gender:</b> {{ product.get_gender_display }}</div>
+        <div class="col-3 text-left"><b>Color:</b> {{ product.color }}</div>
+    </div>
+    <div>
+    </div>
+    <div id="carouselContainer" class="border rounded border-black">
+        <div id="carouselControls" class="carousel slide mt-4"
+             data-ride="carousel">
+            <div class="carousel-inner">
+                {% for image in product.product_images %}
+                    <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                        <img class="d-block w-100 img-carousel center-block" src="{{ image }}" alt="slide">
+                    </div>
+                {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#carouselControls"
+               role="button"
+               data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselControls"
+               role="button"
+               data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
     </div>
 {% endblock %}
