@@ -79,7 +79,7 @@ class ProductAdmin(admin.ModelAdmin, GotoNextAdminMixin):
     fields = (
         'title',
         'product_url',
-        'product_images',
+        'admin_product_images',
         'gender',
         'category',
         'color',
