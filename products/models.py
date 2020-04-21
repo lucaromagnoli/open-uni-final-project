@@ -53,7 +53,7 @@ class CategoryDesignDetail(models.Model):
     design_detail = models.ForeignKey(DesignDetail, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.category.name} | {self.design_detail.name}'
+        return f'{self.design_detail.name}'
 
     def validate_unique(self, exclude=None):
         obj = CategoryDesignDetail.objects.filter(
@@ -73,7 +73,7 @@ class CategoryMaterial(models.Model):
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.category.name} | {self.material.name}'
+        return f'{self.material.name}'
 
     def validate_unique(self, exclude=None):
         obj = CategoryMaterial.objects.filter(category_id=self.category.id,
@@ -93,7 +93,7 @@ class CategoryType(models.Model):
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.category.name} | {self.type.name}'
+        return f'{self.type.name}'
 
     def validate_unique(self, exclude=None):
         obj = CategoryType.objects.filter(category_id=self.category.id,
@@ -115,7 +115,6 @@ class Product(models.Model):
         ('N', 'neutral'),
         ('W', 'women')
     ]
-
     title = models.CharField(max_length=200)
     product_url = models.URLField(max_length=200, unique=True)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
@@ -143,9 +142,8 @@ class Product(models.Model):
     def image_path(name):
         return f'https://rossi-rei-data.s3.us-east-2.amazonaws.com/manufacturers/pictures/full/{name}'
 
-    def product_images(self):
-        """Method to return store images for admin panel"""
-
+    def admin_product_images(self):
+        """Return product images as HTML string"""
         images = ''
         for img in self.get_images():
             images += f'<img src="{self.image_path(img)}" height="300" width="300"/>'
@@ -154,6 +152,10 @@ class Product(models.Model):
     @property
     def main_image(self):
         return self.image_path(self.productimage_set.first().name)
+
+    @property
+    def product_images(self):
+        return [self.image_path(img) for img in self.get_images()]
 
 
 class ProductImage(models.Model):
