@@ -6,13 +6,39 @@
         <div class="col-6 text-left"><h4>
             <b>Manufacturer:</b> {{ product.manufacturer }}</h4></div>
     </div>
-    <div class="row mt-2 mb-4">
-        <div class="col-3 text-left"><b>Category:</b> {{ product.category }}
+    <hr/>
+    <div class="row mt-2">
+        <div class="col-3 text-left">
+            <b>Category:</b> {{ product.category }}
         </div>
-        <div class="col-3 text-left"><b>Type:</b> {{ product.type }}</div>
+        <div class="col-3 text-left">
+            <b>Type:</b> {{ product.type }}</div>
         <div class="col-3 text-left text-capitalize">
             <b>Gender:</b> {{ product.get_gender_display }}</div>
         <div class="col-3 text-left"><b>Color:</b> {{ product.color }}</div>
+    </div>
+    <hr/>
+    <div class="row mt-2 mb-2">
+        <div class="col-6 text-left">
+            <ul class="list-group list-group-flush">
+                <div class="mb-2"><b>Design Details</b></div>
+                {% for dd in product.design_details.all %}
+                    <li class="list-group-item flush">
+                        {{ dd }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-6 text-left">
+            <ul class="list-group list-group-flush">
+                <div class="mb-2"><b>Materials</b></div>
+                {% for dd in product.materials.all %}
+                    <li class="list-group-item flush">
+                        {{ dd }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
     <div>
     </div>
@@ -39,5 +65,25 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
+    </div>
+    <div class="row mt-2 mb-2">
+        <div class="col-3 text-left">
+            <b>SKU:</b> {{ product.sky }}
+        </div>
+        <div class="col-3 text-left">
+            <b>Price:</b>
+            {{ product.currency }} {{ product.price }}
+        </div>
+        <div class="col-3 text-left">
+            <b>Dimensions:</b> {{ product.dimensions }}
+        </div>
+        <div class="col-3 text-left">
+            <b>Weight:</b> {{ product.weight }}
+        </div>
+    </div>
+    <hr/>
+    <div class="row mt-2 mb-2">
+        <b>Description:</b>
+        {{ product.description }}
     </div>
 {% endblock %}
