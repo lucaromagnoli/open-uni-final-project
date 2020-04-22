@@ -45,19 +45,21 @@
     </ul>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
-        $("#id_category").change(function () {
-            let url = $("#productForm").attr("data-types-url");
-            let categoryId = $(this).val();
-            $.ajax({
-                url: url,
-                data: {
-                    'category': categoryId
-                },
-                success: function (data) {
-                    $("#id_type").html(data);
-                }
-            });
-
-        });
+        jQuery.noConflict();
+        (function ($) {
+            $("#id_category").change(function () {
+                let url = $("#productForm").attr("data-types-url");
+                let categoryId = $(this).val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'category': categoryId
+                    },
+                    success: function (data) {
+                        $("#id_type").html(data);
+                    }
+                });
+            })
+        })(jQuery);
     </script>
 {% endblock %}
