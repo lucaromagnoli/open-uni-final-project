@@ -4,45 +4,72 @@
     <h4 class="mt-2 mb-4">Search Products</h4>
     <form method="GET" id="productForm"
           data-types-url="{% url 'milaner:ajax_load_types' %}" novalidate>
-        {{ form|crispy }}
+        {{ form | crispy }}
         <div class="row">
             <div class="col-6">
-                {{ filter.form.manufacturer|as_crispy_field }}
+                {{ filter.form.manufacturer | as_crispy_field }}
             </div>
             <div class="col-6">
-                {{ filter.form.gender|as_crispy_field }}
+                {{ filter.form.gender | as_crispy_field }}
             </div>
         </div>
         <div class="row">
             <div class="col-6">
-                {{ filter.form.category|as_crispy_field }}
+                {{ filter.form.category | as_crispy_field }}
             </div>
             <div class="col-6">
-                {{ filter.form.type|as_crispy_field }}
+                {{ filter.form.type | as_crispy_field }}
             </div>
         </div>
-        {{ filter.form.title|as_crispy_field }}
+        {{ filter.form.title | as_crispy_field }}
         <button type="submit" class="btn btn-dark">Search</button>
     </form>
     <ul class="list-group">
-        {% for obj in filter.qs %}
-            <li class="media border rounded border-black mt-2 mb-2" >
-            <div class="media-body col-sm-8 pt-4 pl-4">
-                <a href="{% url 'milaner:product_detail' pk=obj.pk %}" >
-                    <span class="font-weight-bold">Product Title:</span> {{ obj.title }}
-                </a>
-                <div>
-                    <span class="font-weight-bold">Manufacturer:</span> {{ obj.manufacturer.name }}
+        {% for product in products %}
+            <li class="media border rounded border-black mt-2 mb-2">
+                <div class="media-body col-sm-8 pt-4 pl-4">
+                    <a href="{% url 'milaner:product_detail' pk=product.pk %}">
+                        <span class="font-weight-bold">Product Title:</span> {{ product.title }}
+                    </a>
+                    <div>
+                        <span class="font-weight-bold">Manufacturer:</span> {{ product.manufacturer.name }}
+                    </div>
                 </div>
-            </div>
-            <div class="col-sm-4 p-4">
-                <a href="{% url 'milaner:product_detail' pk=obj.pk %}">
-                    <img src="{{ obj.main_image }}" class="img-thumbnail float-right" alt="product thumbnail" height="300" width="300">
-                </a>
-            </div>
+                <div class="col-sm-4 p-4">
+                    <a href="{% url 'milaner:product_detail' pk=product.pk %}">
+                        <img src="{{ product.main_image }}" class="img-thumbnail float-right" alt="product thumbnail" height="300" width="300">
+                    </a>
+                </div>
             </li>
         {% endfor %}
     </ul>
+    {% if products.has_other_pages %}
+        <nav>
+            <ul class="pagination justify-content-center">
+            {% if products.has_previous %}
+                <li class="page-item">
+                    <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+            {% for i in products.paginator.page_range %}
+                {% if products.number == i %}
+                    <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+                    </li>
+                {% else %}
+                    <li class="page-item"><a href="?page={{ i }}" class="page-link">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+                <li class="page-item"><a href="?page={{ products.next_page_number }}" class="page-link">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
         jQuery.noConflict();
