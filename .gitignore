@@ -105,3 +105,6 @@ venv.bak/
 /secret_key.txt
 /node_modules/
 /secrets.txt
+
+.DS_Store
+.idea
