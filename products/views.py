@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 import django_filters
 
@@ -31,7 +32,20 @@ def load_types(request):
 
 def product_list(request):
     f = ProductFilter(request.GET, queryset=Product.objects.all())
-    return render(request, 'product_list.html', {'filter': f})
+    filtered_qs = f.qs
+    paginator = Paginator(filtered_qs, 10)
+    page = request.GET.get('page', '1')
+    try:
+        response = paginator.page(page)
+    except PageNotAnInteger:
+        response = paginator.page(1)
+    except EmptyPage:
+        response = paginator.page(paginator.num_pages)
+    return render(
+        request,
+        'product_list.html',
+        {'products': response, 'filter': f}
+    )
 
 
 def product_detail(request, pk):
