@@ -6,6 +6,7 @@ from django.utils.html import format_html
 class Manufacturer(models.Model):
     name = models.CharField(max_length=200, unique=True)
     website = models.URLField()
+    email = models.EmailField(blank=True)
     city = models.CharField(max_length=200, blank=True)
     country = models.CharField(max_length=200, blank=True)
 
