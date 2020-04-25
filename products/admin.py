@@ -85,10 +85,11 @@ class ProductAdmin(admin.ModelAdmin, GotoNextAdminMixin):
         'color',
         'type',
         'design_details',
-        'materials'
+        'materials',
+        'reviewed'
     )
     readonly_fields = ('title', 'product_url', 'admin_product_images')
-    list_filter = ('manufacturer', 'category')
+    list_filter = ('manufacturer', 'category', 'reviewed')
 
     def response_change(self, request, obj):
         """Determines the HttpResponse for the change_view stage."""
