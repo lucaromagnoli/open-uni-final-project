@@ -87,7 +87,7 @@ class ProductAdmin(admin.ModelAdmin, GotoNextAdminMixin):
         'design_details',
         'materials'
     )
-    readonly_fields = ('title', 'product_url', 'product_images')
+    readonly_fields = ('title', 'product_url', 'admin_product_images')
     list_filter = ('manufacturer', 'category')
 
     def response_change(self, request, obj):
