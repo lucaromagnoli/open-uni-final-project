@@ -53,3 +53,11 @@ a, a:hover,a:visited, a:focus {
 .carousel-inner img {
   margin: auto;
 }
+
+.site-header__logo .svg-logo {
+    height: 44px;
+    width: 172px;
+    text-align: center;
+    display: block;
+    margin: auto;
+}
