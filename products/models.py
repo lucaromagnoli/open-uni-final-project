@@ -159,6 +159,10 @@ class Product(models.Model):
     def product_images(self):
         return [self.image_path(img) for img in self.get_images()]
 
+    @property
+    def title_grid(self):
+        return " ".join([c for c in self.title.split() if c.isalpha()]).capitalize()
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

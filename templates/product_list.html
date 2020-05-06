@@ -26,24 +26,34 @@
     </form>
 
     {% if products %}
-        <div class="row">
+        <div class="row mt-4">
             {% for product in products %}
-                <div class="item-container col-md-4"> {{ product.title }} </div>
+                <div class="col-md-4 mt-2 mb-2">
+                    <div class="card h-100">
+                        <a href="{% url 'milaner:product_detail' pk=product.pk %}">
+                            <img class="card-img-top" src="{{ product.main_image }}" alt="{{ product.title }}">
+                        </a>
+                        <div class="card-body bg-light">
+                            <h6>{{ product.title_grid }}</h6>
+                            <p>{{ product.manufacturer.name }}</p>
+                        </div>
+                    </div>
+                </div>
                 {% if forloop.counter|divisibleby:3 %}
                     </div>
                     <div class="row">
                 {% endif %}
             {% endfor %}
-                    </div>
+            </div>
     {% else %}
-        <div>
-            Nothing found.
+        <div class="mt-4">
+            <h6>No products found</h6>
         </div>
     {% endif %}
 
     {% if products.has_other_pages %}
         <nav>
-            <ul class="pagination justify-content-center">
+            <ul class="pagination justify-content-center mt-4">
                 {% if products.has_previous %}
                     <li class="page-item">
                         <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
