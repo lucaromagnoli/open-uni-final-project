@@ -21,6 +21,14 @@
                 {{ filter.form.type | as_crispy_field }}
             </div>
         </div>
+        <div class="row">
+            <div class="col-6">
+                {{ filter.form.design_details | as_crispy_field }}
+            </div>
+            <div class="col-6">
+                {{ filter.form.materials | as_crispy_field }}
+            </div>
+        </div>
         {{ filter.form.title | as_crispy_field }}
         <button type="submit" class="btn btn-dark">Search</button>
     </form>
