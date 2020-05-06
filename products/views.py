@@ -33,7 +33,7 @@ def load_types(request):
 def product_list(request):
     f = ProductFilter(request.GET, queryset=Product.objects.all())
     filtered_qs = f.qs
-    paginator = Paginator(filtered_qs, 10)
+    paginator = Paginator(filtered_qs, 12)
     page = request.GET.get('page', '1')
     try:
         response = paginator.page(page)

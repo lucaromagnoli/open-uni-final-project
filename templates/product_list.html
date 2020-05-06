@@ -24,51 +24,55 @@
         {{ filter.form.title | as_crispy_field }}
         <button type="submit" class="btn btn-dark">Search</button>
     </form>
-    <ul class="list-group">
-        {% for product in products %}
-            <li class="media border rounded border-black mt-2 mb-2">
-                <div class="media-body col-sm-8 pt-4 pl-4">
-                    <a href="{% url 'milaner:product_detail' pk=product.pk %}">
-                        <span class="font-weight-bold">Product Title:</span> {{ product.title }}
-                    </a>
-                    <div>
-                        <span class="font-weight-bold">Manufacturer:</span> {{ product.manufacturer.name }}
+
+    {% if products %}
+        <div class="row">
+            {% for product in products %}
+                <div class="item-container col-md-4"> {{ product.title }} </div>
+                {% if forloop.counter|divisibleby:3 %}
                     </div>
-                </div>
-                <div class="col-sm-4 p-4">
-                    <a href="{% url 'milaner:product_detail' pk=product.pk %}">
-                        <img src="{{ product.main_image }}" class="img-thumbnail float-right" alt="product thumbnail" height="300" width="300">
-                    </a>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+                    <div class="row">
+                {% endif %}
+            {% endfor %}
+                    </div>
+    {% else %}
+        <div>
+            Nothing found.
+        </div>
+    {% endif %}
+
     {% if products.has_other_pages %}
         <nav>
             <ul class="pagination justify-content-center">
-            {% if products.has_previous %}
-                <li class="page-item">
-                    <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
-                </li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-            {% endif %}
-            {% for i in products.paginator.page_range %}
-                {% if i <= products.number|add:5 and i >= products.number|add:-5 %}
-                {% if products.number == i %}
-                    <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+                {% if products.has_previous %}
+                    <li class="page-item">
+                        <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;</a>
                     </li>
                 {% else %}
-                    <li class="page-item"><a href="?page={{ i }}" class="page-link">{{ i }}</a></li>
+                    <li class="page-item disabled"><span class="page-link">&laquo;</span>
+                    </li>
                 {% endif %}
-                {%  endif %}
-            {% endfor %}
-            {% if products.has_next %}
-                <li class="page-item"><a href="?page={{ products.next_page_number }}" class="page-link">&raquo;</a>
-                </li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
-            {% endif %}
+                {% for i in products.paginator.page_range %}
+                    {% if i <= products.number|add:5 and i >= products.number|add:-5 %}
+                        {% if products.number == i %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% if products.has_next %}
+                    <li class="page-item">
+                        <a href="?page={{ products.next_page_number }}" class="page-link">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">&raquo;</span>
+                    </li>
+                {% endif %}
             </ul>
         </nav>
     {% endif %}
