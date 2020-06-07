@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 import django_filters
@@ -24,12 +25,14 @@ class ProductFilter(django_filters.FilterSet):
                 pass
 
 
+@login_required()
 def load_types(request):
     category_id = request.GET.get('category')
     types = CategoryType.objects.filter(category_id=category_id)
     return render(request, 'types_dropdown_list_options.html', {'types': types})
 
 
+@login_required()
 def product_list(request):
     f = ProductFilter(request.GET, queryset=Product.objects.all())
     filtered_qs = f.qs
@@ -48,6 +51,7 @@ def product_list(request):
     )
 
 
+@login_required()
 def product_detail(request, pk):
     product = Product.objects.get(pk=pk)
     return render(request, 'product_detail.html', {'product': product})
