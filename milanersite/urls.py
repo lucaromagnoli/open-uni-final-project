@@ -7,11 +7,10 @@ from django.urls import include, path
 from products.views import product_list
 
 urlpatterns = [
-    # path('login/', auth_views.login, name='login'),
-    # path('logout/', auth_views.logout, name='logout'),
     path('admin/', admin.site.urls),
     path('', include('products.urls')),
-    path('', product_list, name='home')
+    path('', product_list, name='home'),
+    path('', include('django.contrib.auth.urls')),
 ]
 
 
