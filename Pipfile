@@ -6,7 +6,6 @@ verify_ssl = true
 [dev-packages]
 ipython = "*"
 jupyter = "*"
-notebook = "*"
 pandas = "*"
 
 [packages]
@@ -25,7 +24,6 @@ babel = "*"
 gunicorn = "*"
 django-heroku = "*"
 dj-database-url = "*"
-pandas = "*"
 django-filter = "*"
 django-crispy-forms = "*"
 
