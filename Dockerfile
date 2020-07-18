@@ -1,4 +1,4 @@
-FROM python:3.7-alpine
+FROM python:3.8-slim-buster
 
 # work directory
 WORKDIR /app
@@ -10,12 +10,12 @@ ENV DEBUG 0
 
 # build deps
 COPY Pipfile Pipfile.lock /app/
-RUN apk update && \
-    apk add --virtual build-deps gcc python3-dev musl-dev libffi-dev && \
-    apk add postgresql-dev libxml2-dev libxslt-dev && \
-    pip install --upgrade pip pipenv=="2018.11.26" && \
-    pipenv install --system --deploy && \
-    apk del build-deps
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y netcat-openbsd gcc libpq-dev && \
+    apt-get clean
+RUN pip install --upgrade pip pipenv=="2018.11.26" && \
+    pipenv install --system --deploy
 
 COPY . /app/
 
