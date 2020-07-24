@@ -133,7 +133,7 @@ class Product(models.Model):
     weight = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
     reviewed = models.BooleanField(default=False)
-    image_vector = models.BinaryField()
+    image_vector = models.BinaryField(blank=True)
 
     def __str__(self):
         return f'{self.title} | {self.manufacturer} | {self.category}'
