@@ -18,6 +18,9 @@ migrations:
 djangoshell:
 	docker-compose exec web python manage.py shell
 
+djangoadmin:
+	docker-compose exec web django-admin ${args}
+
 flush:
 	docker-compose exec web python manage.py flush
 
@@ -38,3 +41,9 @@ heroku-populate:
 
 heroku-deploy:
 	git push heroku master
+
+heroku-production:
+	heroku git:remote -a milaner
+
+heroku-test:
+	heroku git:remote -a milaner-test
