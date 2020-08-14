@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.7-slim-buster
 
 # work directory
 WORKDIR /app
@@ -12,7 +12,7 @@ ENV DEBUG 0
 COPY Pipfile Pipfile.lock /app/
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y netcat-openbsd gcc libpq-dev && \
+    apt-get install -y netcat-openbsd gcc libpq-dev g++ && \
     apt-get clean
 RUN pip install --upgrade pip pipenv=="2018.11.26" && \
     pipenv install --system --deploy
