@@ -20,5 +20,5 @@ RUN pip install --upgrade pip pipenv=="2018.11.26" && \
 COPY . /app/
 
 # add and run as non-root user
-RUN adduser -D app_user
+RUN adduser app_user
 USER app_user
