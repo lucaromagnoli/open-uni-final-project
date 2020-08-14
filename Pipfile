@@ -26,6 +26,10 @@ django-heroku = "*"
 dj-database-url = "*"
 django-filter = "*"
 django-crispy-forms = "*"
+tensorflow = "*"
+tensorflow-hub = "*"
+annoy = "*"
+django-picklefield = "*"
 
 [requires]
 python_version = "3.7"
