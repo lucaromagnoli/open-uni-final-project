@@ -17,7 +17,7 @@ RUN apt-get update && \
 RUN pip install --upgrade pip pipenv=="2018.11.26" && \
     pipenv install --system --deploy
 
-COPY . /app/
+COPY .. /app/
 
 # add and run as non-root user
 RUN adduser app_user
