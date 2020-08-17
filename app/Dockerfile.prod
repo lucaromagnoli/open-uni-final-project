@@ -1,0 +1,48 @@
+FROM python:3.7-slim-buster
+
+# env vars
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV DEBUG 0
+
+ARG BUILD_DEPS="build-essential libpq-dev"
+ARG DEPS="gdal-bin gettext postgresql-client"
+
+# create directory for the app user
+RUN mkdir -p /home/app
+
+# create app user
+ARG APP_USER=appuser
+RUN groupadd -r ${APP_USER} && useradd --no-log-init -r -g ${APP_USER} ${APP_USER}
+
+# create the appropriate directories
+ENV HOME=/home/app
+ENV APP_HOME=/home/app/web
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/staticfiles
+RUN mkdir $APP_HOME/mediafiles
+WORKDIR $APP_HOME
+
+
+COPY requirements.txt $APP_HOME
+
+RUN apt-get update && \
+    apt-get install -y $BUILD_DEPS $DEPS --no-install-recommends
+RUN pip install --no-cache-dir -r requirements.txt \
+    && apt-get purge -y --auto-remove $BUILD_DEPS \
+    && rm -rf /var/lib/apt/lists/*
+
+# copy entrypoint-prod.sh
+COPY ./entrypoint.prod.sh $APP_HOME
+
+# copy project
+COPY . $APP_HOME
+
+# chown all the files to the app user
+RUN chown -R ${APP_USER}:${APP_USER} $APP_HOME
+
+# change to the app user
+USER $APP_USER
+
+# run entrypoint.prod.sh
+ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]

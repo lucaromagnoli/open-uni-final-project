@@ -108,3 +108,8 @@ venv.bak/
 
 .DS_Store
 .idea
+.commands.sh
+/.commands.sh
+!/.env.staging
+/.env.staging
+/.env.staging.proxy-companion

@@ -1,6 +1,6 @@
 .git
 .ipynb_checkpoints
-app/Dockerfile
+Dockerfile
 docker-compose.yml
 db.sqlite3
 .DS_Store
@@ -11,4 +11,4 @@ venv/*
 *.ipynb
 Pipfile
 Pipfile.lock
-/.python-version
+.python-version
