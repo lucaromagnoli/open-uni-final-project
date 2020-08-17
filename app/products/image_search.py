@@ -2,7 +2,6 @@ from functools import lru_cache
 import logging
 
 import numpy as np
-import requests
 import tensorflow as tf
 import tensorflow_hub as hub
 from annoy import AnnoyIndex
@@ -16,13 +15,16 @@ def get_tf_module():
     return hub.load(module_handle)
 
 
+module = get_tf_module()
+
+
 def get_features_from_image_url(img):
     """Calculate features vector given an img URL"""
     logger.info(f'Getting feature vectors for image')
     img = tf.io.decode_jpeg(img, channels=3)
     img = tf.image.resize_with_pad(img, 224, 224)
     img = tf.image.convert_image_dtype(img, tf.float32)[tf.newaxis, ...]
-    module = get_tf_module()
+    global module
     features = module(img)
     return np.squeeze(features)
 
