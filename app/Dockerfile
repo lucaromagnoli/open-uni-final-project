@@ -1,6 +1,7 @@
 FROM python:3.7-slim-buster
 
-# work directory
+ARG APP_USER=appuser
+RUN groupadd -r ${APP_USER} && useradd --no-log-init -r -g ${APP_USER} ${APP_USER}
 WORKDIR /app
 
 # env vars
@@ -8,17 +9,15 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DEBUG 0
 
-# build deps
-COPY Pipfile Pipfile.lock /app/
+ARG BUILD_DEPS="build-essential libpq-dev"
+ARG DEPS="gdal-bin gettext postgresql-client"
+
+COPY requirements.txt /app
+
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y netcat-openbsd gcc libpq-dev g++ && \
-    apt-get clean
-RUN pip install --upgrade pip pipenv=="2018.11.26" && \
-    pipenv install --system --deploy
+    apt-get install -y $BUILD_DEPS $DEPS --no-install-recommends
+RUN pip install --no-cache-dir -r requirements.txt \
+    && apt-get purge -y --auto-remove $BUILD_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY .. /app/
-
-# add and run as non-root user
-RUN adduser app_user
-USER app_user
+COPY . /app
