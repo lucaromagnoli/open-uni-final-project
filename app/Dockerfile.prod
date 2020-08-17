@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED 1
 ENV DEBUG 0
 
 ARG BUILD_DEPS="build-essential libpq-dev"
-ARG DEPS="gdal-bin gettext postgresql-client"
+ARG DEPS="gdal-bin gettext postgresql-client netcat"
 
 # create directory for the app user
 RUN mkdir -p /home/app
