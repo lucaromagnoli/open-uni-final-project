@@ -12,10 +12,9 @@ module_handle = "https://tfhub.dev/google/imagenet/mobilenet_v2_140_224/feature_
 module = hub.load(module_handle)
 
 
-def get_features_from_image_url(img_url):
+def get_features_from_image_url(img):
     """Calculate features vector given an img URL"""
-    logger.info(f'Getting feature vectors for image {img_url}')
-    img = requests.get(img_url).content
+    logger.info(f'Getting feature vectors for image')
     img = tf.io.decode_jpeg(img, channels=3)
     img = tf.image.resize_with_pad(img, 224, 224)
     img = tf.image.convert_image_dtype(img, tf.float32)[tf.newaxis, ...]
@@ -32,10 +31,10 @@ def create_annoy_index(vectors, dims=1792, trees=10000):
     return a
 
 
-def get_similar_products(image_url, vectors):
+def get_similar_products(image_content, vectors):
     """
     Get most similar products to image url
-    :param image_url: the image URL to get most similar products for
+    :param image_content: the binary content of the image
     :param vectors: a list where the items are two-tuples of product.pk and product.image_vector
     :return:
     """

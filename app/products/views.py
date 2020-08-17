@@ -65,12 +65,12 @@ def product_list_by_image(request):
     image_file = request.FILES['image_file']
     fs = FileSystemStorage()
     filename = fs.save(image_file.name, image_file)
+    img_content = filename.read()
     rel_url = fs.url(filename)
-    abs_url = request.build_absolute_uri(rel_url)
     vectors = [
         (p.pk, p.image_vector) for p in Product.objects.all().order_by('pk')
     ]
-    similar_pks = get_similar_products(abs_url, vectors)
+    similar_pks = get_similar_products(img_content, vectors)
     similar_products = Product.objects.filter(pk__in=similar_pks)
     return render(
         request,
