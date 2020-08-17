@@ -63,9 +63,9 @@ def product_list_by_params(request):
 def product_list_by_image(request):
     f = ProductFilter(request.GET, queryset=Product.objects.none())
     image_file = request.FILES['image_file']
+    img_content = image_file.read()
     fs = FileSystemStorage()
     filename = fs.save(image_file.name, image_file)
-    img_content = filename.read()
     rel_url = fs.url(filename)
     vectors = [
         (p.pk, p.image_vector) for p in Product.objects.all().order_by('pk')
