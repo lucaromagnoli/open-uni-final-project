@@ -43,7 +43,7 @@ def get_similar_products(image_content, vectors):
     :param vectors: a list where the items are two-tuples of product.pk and product.image_vector
     :return:
     """
-    features_vector = get_features_from_image_url(image_url)
+    features_vector = get_features_from_image_url(image_content)
     annoy_index = create_annoy_index(vectors)
     neighbours = annoy_index.get_nns_by_vector(features_vector, 20, include_distances=True)
     logger.info(neighbours)
