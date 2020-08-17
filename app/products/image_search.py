@@ -1,3 +1,4 @@
+from functools import lru_cache
 import logging
 
 import numpy as np
@@ -8,8 +9,11 @@ from annoy import AnnoyIndex
 
 logger = logging.getLogger(__name__)
 
-module_handle = "https://tfhub.dev/google/imagenet/mobilenet_v2_140_224/feature_vector/4"
-module = hub.load(module_handle)
+
+@lru_cache(maxsize=2)
+def get_tf_module():
+    module_handle = "https://tfhub.dev/google/imagenet/mobilenet_v2_140_224/feature_vector/4"
+    return hub.load(module_handle)
 
 
 def get_features_from_image_url(img):
@@ -18,6 +22,7 @@ def get_features_from_image_url(img):
     img = tf.io.decode_jpeg(img, channels=3)
     img = tf.image.resize_with_pad(img, 224, 224)
     img = tf.image.convert_image_dtype(img, tf.float32)[tf.newaxis, ...]
+    module = get_tf_module()
     features = module(img)
     return np.squeeze(features)
 
