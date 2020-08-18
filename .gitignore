@@ -82,7 +82,7 @@ celerybeat-schedule
 *.sage.py
 
 # Environments
-.env
+.env.dev
 .venv
 env/
 venv/
@@ -108,3 +108,8 @@ venv.bak/
 
 .DS_Store
 .idea
+.commands.sh
+/.commands.sh
+!/.env.staging
+/.env.staging
+/.env.staging.proxy-companion

@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import format_html
+from picklefield.fields import PickledObjectField
 
 
 class Manufacturer(models.Model):
@@ -133,6 +134,7 @@ class Product(models.Model):
     weight = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
     reviewed = models.BooleanField(default=False)
+    image_vector = PickledObjectField(blank=True)
 
     def __str__(self):
         return f'{self.title} | {self.manufacturer} | {self.category}'

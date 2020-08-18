@@ -9,3 +9,6 @@ README.md
 venv/*
 *.csv
 *.ipynb
+Pipfile
+Pipfile.lock
+.python-version

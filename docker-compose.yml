@@ -8,17 +8,14 @@ services:
     ports:
       - "5432:5432"
   web:
-    build: .
-    environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    build: ./app
+    env_file:
+      - ./.env.dev
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
+      - ./app:/app
     ports:
-      - "${HOST_PORT}:8000"
+      - 8000:8000
     depends_on:
       - db
 

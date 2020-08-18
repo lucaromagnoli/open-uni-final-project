@@ -1,15 +1,16 @@
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
-from products.views import product_list
+from products.views import SearchView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('products.urls')),
-    path('', product_list, name='home'),
+    path('', login_required(SearchView.as_view()), name='home'),
     path('', include('django.contrib.auth.urls')),
 ]
 

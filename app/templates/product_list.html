@@ -1,38 +1,80 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h4 class="mt-2 mb-4">Search Products</h4>
-    <form method="GET" id="productForm"
-          data-types-url="{% url 'milaner:ajax_load_types' %}" novalidate>
-        {{ form | crispy }}
-        <div class="row">
-            <div class="col-6">
-                {{ filter.form.manufacturer | as_crispy_field }}
+    <h4 class="mt-2 mb-2">Search Products</h4>
+    <!--Search By Parameter Container-->
+    <div class="container-fluid border rounded pt-3 pl-4 pr-4 pb-3 mb-4">
+        <form method="GET" id="productForm"
+              data-types-url="{% url 'milaner:ajax_load_types' %}" novalidate>
+            {{ form | crispy }}
+            <div class="row">
+                <div class="col-6">
+                    <h5>By Parameters</h5>
+                </div>
+                <div class="col-6">
+                    <button type="submit" class="btn btn-dark float-right">
+                        Search
+                    </button>
+                </div>
             </div>
-            <div class="col-6">
-                {{ filter.form.gender | as_crispy_field }}
+            <div class="row">
+                <div class="col-6">
+                    {{ filter.form.manufacturer | as_crispy_field }}
+                </div>
+                <div class="col-6">
+                    {{ filter.form.gender | as_crispy_field }}
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                {{ filter.form.category | as_crispy_field }}
+            <div class="row">
+                <div class="col-6">
+                    {{ filter.form.category | as_crispy_field }}
+                </div>
+                <div class="col-6">
+                    {{ filter.form.type | as_crispy_field }}
+                </div>
             </div>
-            <div class="col-6">
-                {{ filter.form.type | as_crispy_field }}
+            <div class="row">
+                <div class="col-6">
+                    {{ filter.form.design_details | as_crispy_field }}
+                </div>
+                <div class="col-6">
+                    {{ filter.form.materials | as_crispy_field }}
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                {{ filter.form.design_details | as_crispy_field }}
+            <div class="row">
+                <div class="col-12">
+                    {{ filter.form.title | as_crispy_field }}
+                </div>
             </div>
-            <div class="col-6">
-                {{ filter.form.materials | as_crispy_field }}
+        </form>
+    </div>
+    <!--Search By Image Container-->
+    <div class="container-fluid border rounded pt-3 pl-4 pr-4 pb-3">
+        <form method="post" enctype="multipart/form-data" id="ReverseImage">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-6">
+                    <h5>By Image</h5>
+                </div>
+                <div class="col-6">
+                    <button type="submit" class="btn btn-dark float-right">
+                        Search
+                    </button>
+                </div>
             </div>
-        </div>
-        {{ filter.form.title | as_crispy_field }}
-        <button type="submit" class="btn btn-dark">Search</button>
-    </form>
-
+            <div class="row">
+                <div class="col-8">
+                    <input type="file" name="image_file" accept="image/*">
+                </div>
+            </div>
+            {% if file_url %}
+                <div class="row">
+                    <img class="rounded img-thumbnail float-right" src="{{ file_url }}" alt="uploaded image" width="20%">
+                </div>
+            {% endif %}
+        </form>
+    </div>
+    <!-- Product listing -->
     {% if products %}
         <div class="row mt-4">
             {% for product in products %}
@@ -58,7 +100,7 @@
             <h6>No products found</h6>
         </div>
     {% endif %}
-
+    <!-- pagination -->
     {% if products.has_other_pages %}
         <nav>
             <ul class="pagination justify-content-center mt-4">
@@ -94,6 +136,7 @@
             </ul>
         </nav>
     {% endif %}
+    <!-- type category chain -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
         jQuery.noConflict();
