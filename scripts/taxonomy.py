@@ -21,6 +21,7 @@ def generate_taxonomy(filename):
     hats = {k: [i for i in v if pd.notnull(i)] for k, v in
             pd.read_excel(xls, 'Hats').to_dict('list').items()}
     taxonomy = {
+        'categories': ['Bags', 'Wallets', 'Shoes', 'Hats'],
         'colors': colors,
         'materials': materials,
         'bags': bags,
