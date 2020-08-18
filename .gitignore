@@ -103,7 +103,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 /secret_key.txt
-/node_modules/
+*/node_modules/
 /secrets.txt
 
 .DS_Store
