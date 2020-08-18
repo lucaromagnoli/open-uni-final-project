@@ -8,8 +8,8 @@ services:
     image: 839338725350.dkr.ecr.us-east-2.amazonaws.com/django-ec2:web
     command: gunicorn milanersite.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - static_volume:/home/app/web/static
-      - media_volume:/home/app/web/media
+      - static_volume:/home/app/web/static_root
+      - media_volume:/home/app/web/media_root
       - ./app:/home/app/web
     expose:
       - 8000
@@ -24,8 +24,8 @@ services:
       - 443:443
       - 80:80
     volumes:
-      - static_volume:/home/app/web/static
-      - media_volume:/home/app/web/media
+      - static_volume:/home/app/web/static_root
+      - media_volume:/home/app/web/media_root
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
