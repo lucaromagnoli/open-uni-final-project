@@ -6,7 +6,7 @@ services:
       context: ./app
       dockerfile: Dockerfile.prod
     image: 839338725350.dkr.ecr.us-east-2.amazonaws.com/django-ec2:web
-    command: gunicorn hello_django.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn milanersite.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
