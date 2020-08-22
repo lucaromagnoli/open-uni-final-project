@@ -113,3 +113,5 @@ venv.bak/
 !/.env.staging
 /.env.staging
 /.env.staging.proxy-companion
+/.env.prod
+/.env.prod.proxy-companion
