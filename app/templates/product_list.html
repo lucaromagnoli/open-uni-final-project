@@ -5,7 +5,9 @@
     <!--Search By Parameter Container-->
     <div class="container-fluid border rounded pt-3 pl-4 pr-4 pb-3 mb-4">
         <form method="GET" id="productForm"
-              data-types-url="{% url 'milaner:ajax_load_types' %}" novalidate>
+              data-types-url="{% url 'milaner:ajax_load_types' %}"
+              data-designdetails-url="{% url 'milaner:ajax_load_designdetails' %}"
+              data-materials-url="{% url 'milaner:ajax_load_materials' %}" novalidate>
             {{ form | crispy }}
             <div class="row">
                 <div class="col-6">
@@ -142,15 +144,36 @@
         jQuery.noConflict();
         (function ($) {
             $("#id_category").change(function () {
-                let url = $("#productForm").attr("data-types-url");
+                let product_form = $("#productForm")
+                let types_url = product_form.attr("data-types-url");
+                let dd_url = product_form.attr("data-designdetails-url");
+                let materials_url = product_form.attr("data-materials-url");
                 let categoryId = $(this).val();
                 $.ajax({
-                    url: url,
+                    url: types_url,
                     data: {
                         'category': categoryId
                     },
                     success: function (data) {
                         $("#id_type").html(data);
+                    }
+                });
+                $.ajax({
+                    url: dd_url,
+                    data: {
+                        'category': categoryId
+                    },
+                    success: function (data) {
+                        $("#id_design_details").html(data);
+                    }
+                });
+                $.ajax({
+                    url: materials_url,
+                    data: {
+                        'category': categoryId
+                    },
+                    success: function (data) {
+                        $("#id_materials").html(data);
                     }
                 });
             })

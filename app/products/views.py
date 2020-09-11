@@ -5,13 +5,21 @@ from django.shortcuts import render
 from django.views import View
 import django_filters
 
-from .models import Product, CategoryType
+from .models import Product, CategoryType, CategoryDesignDetail, CategoryMaterial
 from .image_search import get_similar_products
 
 
 class ProductFilter(django_filters.FilterSet):
     title = django_filters.CharFilter(lookup_expr='iexact')
-    type = django_filters.ModelChoiceFilter(queryset=CategoryType.objects.none())
+    type = django_filters.ModelChoiceFilter(
+        queryset=CategoryType.objects.none()
+    )
+    design_details = django_filters.ModelChoiceFilter(
+        queryset=CategoryDesignDetail.objects.none()
+    )
+    materials = django_filters.ModelChoiceFilter(
+        queryset=CategoryMaterial.objects.none()
+    )
 
     class Meta:
         model = Product
@@ -24,6 +32,9 @@ class ProductFilter(django_filters.FilterSet):
             category_id = int(self.data['category'])
             try:
                 self.filters['type'].queryset = CategoryType.objects.filter(category_id=category_id)
+                self.filters['design_details'].queryset = CategoryDesignDetail.objects.filter(category_id=category_id)
+                self.filters['materials'].queryset = CategoryMaterial.objects.filter(
+                    category_id=category_id)
             except (ValueError, TypeError):
                 pass
 
@@ -33,6 +44,20 @@ def load_types(request):
     category_id = request.GET.get('category')
     types = CategoryType.objects.filter(category_id=category_id)
     return render(request, 'types_dropdown_list_options.html', {'types': types})
+
+
+@login_required()
+def load_designdetails(request):
+    category_id = request.GET.get('category')
+    design_details = CategoryDesignDetail.objects.filter(category_id=category_id)
+    return render(request, 'dd_dropdown_list_options.html', {'design_details': design_details})
+
+
+@login_required()
+def load_materials(request):
+    category_id = request.GET.get('category')
+    materials = CategoryMaterial.objects.filter(category_id=category_id)
+    return render(request, 'materials_dropdown_list_options.html', {'materials': materials})
 
 
 class SearchView(View):
