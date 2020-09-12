@@ -54,6 +54,7 @@ class CategoryDesignDetail(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     design_detail = models.ForeignKey(DesignDetail, on_delete=models.CASCADE)
 
+
     def __str__(self):
         return f'{self.design_detail.name}'
 
