@@ -23,7 +23,15 @@ class ProductFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = ('manufacturer', 'gender', 'category', 'type', 'design_details', 'materials')
+        fields = (
+            'manufacturer',
+            'gender',
+            'category',
+            'type',
+            'design_details',
+            'materials',
+            'color'
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
