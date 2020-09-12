@@ -47,6 +47,9 @@ def get_similar_products(image_content, vectors):
     """
     features_vector = get_features_from_image_url(image_content)
     annoy_index = create_annoy_index(vectors)
-    neighbours = annoy_index.get_nns_by_vector(features_vector, 20, include_distances=True)
-    logger.info(neighbours)
-    return neighbours[0]
+    neighbours, distances = annoy_index.get_nns_by_vector(
+        features_vector, 12, include_distances=True)
+    nn_dist = zip(neighbours, distances)
+    # anything with distance above 0.65 is not similar enough
+    close_neighbours = [n[0] for n in nn_dist if n[1] <= 0.65]
+    return close_neighbours
