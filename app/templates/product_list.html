@@ -44,7 +44,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-6">
+                    {{ filter.form.color | as_crispy_field }}
+                </div>
+                <div class="col-6">
                     {{ filter.form.title | as_crispy_field }}
                 </div>
             </div>
