@@ -1,4 +1,4 @@
-# Manufacturers Products Database [The computing and IT project - Open University]Manufacturers Products Database [The computing and IT project - Open University]
+# Manufacturers Products Database [The computing and IT project - Open University]
 
 The final module of my Open University qualification.
 
